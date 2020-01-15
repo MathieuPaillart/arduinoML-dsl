@@ -12,5 +12,6 @@
     <modules>
         <module>kernels/jvm</module>
         <module>external-dsl</module>
+        <module>internal-dsl</module>
     </modules>
 </project>

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.unice.polytech</groupId>
-	<artifactId>arduinoML-dsl</artifactId>
+	<artifactId>arduinoML-external-dsl</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ArduinoML DSLs :: External DSL</name>
 	<description>External DSL in ANTLR for ArduinoML</description>
