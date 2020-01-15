@@ -44,12 +44,14 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     @Override
     public void enterRoot(ArduinoMLParser.RootContext ctx) {
+        System.out.println("------------------- enterRoot --------------------");
         built = false;
         theApp = new App();
     }
 
     @Override
     public void exitRoot(ArduinoMLParser.RootContext ctx) {
+        System.out.println("------------------- exitRoot --------------------");
         // Resolving states in transitions
         bindings.forEach((key, binding) -> {
             Transition t = new Transition();
@@ -63,11 +65,13 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     @Override
     public void enterDeclaration(ArduinoMLParser.DeclarationContext ctx) {
+        System.out.println("------------------- enterDeclaration --------------------");
         theApp.setName(ctx.name.getText());
     }
 
     @Override
     public void enterSensor(ArduinoMLParser.SensorContext ctx) {
+        System.out.println("------------------- enterSensor --------------------");
         Sensor sensor = new Sensor();
         sensor.setName(ctx.location().id.getText());
         sensor.setPin(Integer.parseInt(ctx.location().port.getText()));
@@ -77,6 +81,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     @Override
     public void enterActuator(ArduinoMLParser.ActuatorContext ctx) {
+        System.out.println("------------------- enterActuator --------------------");
         Actuator actuator = new Actuator();
         actuator.setName(ctx.location().id.getText());
         actuator.setPin(Integer.parseInt(ctx.location().port.getText()));
@@ -86,6 +91,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     @Override
     public void enterState(ArduinoMLParser.StateContext ctx) {
+        System.out.println("------------------- enterState --------------------");
         State local = new State();
         local.setName(ctx.name.getText());
         this.currentState = local;
@@ -94,12 +100,14 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     @Override
     public void exitState(ArduinoMLParser.StateContext ctx) {
+        System.out.println("------------------- exitState --------------------");
         this.theApp.getStates().add(this.currentState);
         this.currentState = null;
     }
 
     @Override
     public void enterAction(ArduinoMLParser.ActionContext ctx) {
+        System.out.println("------------------- enterAction --------------------");
         Action action = new Action();
         action.setActuator(actuators.get(ctx.receiver.getText()));
         action.setValue(SIGNAL.valueOf(ctx.value.getText()));
@@ -108,6 +116,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     @Override
     public void enterTransition(ArduinoMLParser.TransitionContext ctx) {
+        System.out.println("------------------- enterTransition --------------------");
         // Creating a placeholder as the next state might not have been compiled yet.
         Binding toBeResolvedLater = new Binding();
         toBeResolvedLater.to = ctx.next.getText();
@@ -118,6 +127,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     @Override
     public void enterInitial(ArduinoMLParser.InitialContext ctx) {
+        System.out.println("------------------- enterInitial --------------------");
         this.theApp.setInitial(this.currentState);
     }
 
