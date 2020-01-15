@@ -3,10 +3,10 @@ package fr.unice.polytech.arduinoMLdsl;
 import dsl.ArduinoMLLexer;
 import dsl.ArduinoMLParser;
 import fr.unice.polytech.arduinoMLdsl.visitor.antlr.MyOwnVisitor;
-import jdk.internal.org.objectweb.asm.ClassVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,11 +14,10 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 public class Runner {
 
     public static void main(String[] args) throws IOException {
