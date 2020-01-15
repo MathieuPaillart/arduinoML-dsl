@@ -1,7 +1,7 @@
-# arduinoML-dsl
+# arduinoML-external-dsl
 
 
-#How to run this example
+## How to run this example
 
 First generate sources to be able to compile : 
 
