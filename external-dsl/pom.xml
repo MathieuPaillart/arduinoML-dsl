@@ -5,8 +5,8 @@
 	<groupId>fr.unice.polytech</groupId>
 	<artifactId>arduinoML-dsl</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>arduinoML-dsl</name>
-	<description>Demo project for Spring Boot</description>
+	<name>ArduinoML DSLs :: External DSL</name>
+	<description>External DSL in ANTLR for ArduinoML</description>
 
 	<properties>
 		<java.version>1.8</java.version>
