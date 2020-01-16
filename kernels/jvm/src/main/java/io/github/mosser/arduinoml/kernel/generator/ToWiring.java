@@ -1,8 +1,12 @@
 package io.github.mosser.arduinoml.kernel.generator;
 
 import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.behavioral.*;
-import io.github.mosser.arduinoml.kernel.structural.*;
+import io.github.mosser.arduinoml.kernel.behavioral.Action;
+import io.github.mosser.arduinoml.kernel.behavioral.State;
+import io.github.mosser.arduinoml.kernel.behavioral.Transition;
+import io.github.mosser.arduinoml.kernel.structural.Actuator;
+import io.github.mosser.arduinoml.kernel.structural.Brick;
+import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
 /**
  * Quick and dirty visitor to support the generation of Wiring code
@@ -16,7 +20,15 @@ public class ToWiring extends Visitor<StringBuffer> {
 	}
 
 	private void w(String s) {
-		result.append(String.format("%s\n",s));
+		result.append(String.format("%s\n", s));
+	}
+
+	private void w(String s, boolean newLine) {
+		if (newLine) {
+			w(s);
+		} else {
+			result.append(String.format("%s", s));
+		}
 	}
 
 	@Override
@@ -25,7 +37,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		w(String.format("// Application name: %s\n", app.getName()));
 
 		w("void setup(){");
-		for(Brick brick: app.getBricks()){
+		for (Brick brick : app.getBricks()) {
 			brick.accept(this);
 		}
 		w("}\n");
@@ -56,29 +68,34 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(State state) {
-		w(String.format("void state_%s() {",state.getName()));
-		for(Action action: state.getActions()) {
+		w(String.format("void state_%s() {", state.getName()));
+		for (Action action : state.getActions()) {
 			action.accept(this);
 		}
 
-		if (state.getTransition() != null) {
-			w("  boolean guard = millis() - time > debounce;");
-			context.put(CURRENT_STATE, state);
-			state.getTransition().accept(this);
-			w("}\n");
+		//context.put(CURRENT_STATE, state);
+		w("  boolean guard = millis() - time > debounce;");
+		w("  ", false);
+		for (Transition transition : state.getTransitions()) {
+			transition.accept(this);
 		}
 
+		if (!state.getTransitions().isEmpty()) {
+			w("{");
+		}
+		w(String.format("    state_%s();", state.getName()));
+		if (!state.getTransitions().isEmpty()) {
+			w("  }");
+		}
+		w("}\n");
 	}
 
 	@Override
 	public void visit(Transition transition) {
-		w(String.format("  if( digitalRead(%d) == %s && guard ) {",
-				transition.getSensor().getPin(),transition.getValue()));
+		w(String.format("if( digitalRead(%d) == %s && guard ) {", transition.getSensor().getPin(), transition.getValue()));
 		w("    time = millis();");
-		w(String.format("    state_%s();",transition.getNext().getName()));
-		w("  } else {");
-		w(String.format("    state_%s();",((State) context.get(CURRENT_STATE)).getName()));
-		w("  }");
+		w(String.format("    state_%s();", transition.getNext().getName()));
+		w("  } else ", false);
 	}
 
 	@Override

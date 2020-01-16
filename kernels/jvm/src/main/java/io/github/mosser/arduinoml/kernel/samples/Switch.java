@@ -1,10 +1,14 @@
 package io.github.mosser.arduinoml.kernel.samples;
 
 import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.behavioral.*;
+import io.github.mosser.arduinoml.kernel.behavioral.Action;
+import io.github.mosser.arduinoml.kernel.behavioral.State;
+import io.github.mosser.arduinoml.kernel.behavioral.Transition;
 import io.github.mosser.arduinoml.kernel.generator.ToWiring;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
-import io.github.mosser.arduinoml.kernel.structural.*;
+import io.github.mosser.arduinoml.kernel.structural.Actuator;
+import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
+import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
 import java.util.Arrays;
 
@@ -53,13 +57,13 @@ public class Switch {
 		off2on.setValue(SIGNAL.HIGH);
 
 		// Binding transitions to states
-		on.setTransition(on2off);
-		off.setTransition(off2on);
+		on.setTransitions(Arrays.asList(on2off));
+		off.setTransitions(Arrays.asList(off2on));
 
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch!");
-		theSwitch.setBricks(Arrays.asList(button, led ));
+		theSwitch.setBricks(Arrays.asList(button, led));
 		theSwitch.setStates(Arrays.asList(on, off));
 		theSwitch.setInitial(off);
 
