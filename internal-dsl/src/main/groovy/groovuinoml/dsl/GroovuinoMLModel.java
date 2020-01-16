@@ -1,7 +1,5 @@
 package main.groovy.groovuinoml.dsl;
 
-import java.util.*;
-
 import groovy.lang.Binding;
 import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.behavioral.Action;
@@ -13,6 +11,9 @@ import io.github.mosser.arduinoml.kernel.structural.Actuator;
 import io.github.mosser.arduinoml.kernel.structural.Brick;
 import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
 import io.github.mosser.arduinoml.kernel.structural.Sensor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroovuinoMLModel {
 	private List<Brick> bricks;
@@ -57,7 +58,7 @@ public class GroovuinoMLModel {
 		transition.setNext(to);
 		transition.setSensor(sensor);
 		transition.setValue(value);
-		from.setTransition(transition);
+		//from.setTransitions(transition);
 	}
 	
 	public void setInitialState(State state) {

@@ -10,7 +10,9 @@ import io.github.mosser.arduinoml.kernel.structural.Actuator;
 import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
 import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModelBuilder extends ArduinoMLBaseListener {
@@ -28,7 +30,8 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     private Map<String, Sensor> sensors = new HashMap<>();
     private Map<String, Actuator> actuators = new HashMap<>();
     private Map<String, State> states = new HashMap<>();
-    private Map<String, Binding> bindings = new HashMap<>();
+    private Map<String, List<Binding>> bindings = new HashMap<>();
+    private List<Binding> currentBindings = new ArrayList<>();
     private State currentState = null;
 
     public App retrieve() {
@@ -53,13 +56,13 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     public void exitRoot(ArduinoMLParser.RootContext ctx) {
         System.out.println("------------------- exitRoot --------------------");
         // Resolving states in transitions
-        bindings.forEach((key, binding) -> {
+        bindings.forEach((key, bindings) -> bindings.forEach(binding -> {
             Transition t = new Transition();
             t.setSensor(binding.trigger);
             t.setValue(binding.value);
             t.setNext(states.get(binding.to));
-            states.get(key).setTransition(t);
-        });
+            states.get(key).addTransition(t);
+        }));
         this.built = true;
     }
 
@@ -101,7 +104,9 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     @Override
     public void exitState(ArduinoMLParser.StateContext ctx) {
         System.out.println("------------------- exitState --------------------");
+        this.bindings.put(currentState.getName(), this.currentBindings);
         this.theApp.getStates().add(this.currentState);
+        this.currentBindings = new ArrayList<>();
         this.currentState = null;
     }
 
@@ -122,7 +127,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         toBeResolvedLater.to = ctx.next.getText();
         toBeResolvedLater.trigger = sensors.get(ctx.trigger.getText());
         toBeResolvedLater.value = SIGNAL.valueOf(ctx.value.getText());
-        bindings.put(currentState.getName(), toBeResolvedLater);
+        currentBindings.add(toBeResolvedLater);
     }
 
     @Override

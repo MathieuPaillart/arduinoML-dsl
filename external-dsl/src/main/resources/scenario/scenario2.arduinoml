@@ -1,4 +1,4 @@
-application redButton
+application dualCheckAlarm
 
 # Declaring bricks
 sensor button1: 9
@@ -8,17 +8,17 @@ actuator buzzer: 11
 # Declaring states
 on {
     buzzer <= HIGH
-    button1 is LOW => transition2
-    button2 is LOW => transition1
+    button1 is LOW => transitionButton2
+    button2 is LOW => transitionButton1
 }
 
-transition1 {
+transitionButton1 {
     buzzer <= LOW
     button1 is LOW => off
     button2 is HIGH => on
 }
 
-transition2 {
+transitionButton2 {
     buzzer <= LOW
     button1 is HIGH => on
     button2 is LOW => off
@@ -27,6 +27,6 @@ transition2 {
 
 -> off {
     buzzer <= LOW
-    button1 is HIGH => transition1
-    button2 is HIGH => transition2
+    button1 is HIGH => transitionButton1
+    button2 is HIGH => transitionButton2
 }
