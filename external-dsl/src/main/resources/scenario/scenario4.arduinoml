@@ -1,4 +1,4 @@
-application redButton
+application multiStateAlarm
 
 # Declaring bricks
 sensor button: 9
@@ -8,15 +8,15 @@ actuator buzzer: 11
 # Declaring states
 noise {
     buzzer <= HIGH
-    button is HIGH => led_on
+    button is HIGH => ledOn
 }
 
-led_on {
+ledOn {
     led <= HIGH
     buzzer <= LOW
     button is HIGH => off
-
 }
+
 # -> for initial state
 -> off {
     led <= LOW
