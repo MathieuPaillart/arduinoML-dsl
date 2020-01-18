@@ -14,6 +14,8 @@ import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GroovuinoMLModel {
 	private List<Brick> bricks;
@@ -58,7 +60,8 @@ public class GroovuinoMLModel {
 		transition.setNext(to);
 		transition.setSensor(sensor);
 		transition.setValue(value);
-		//from.setTransitions(transition);
+		// Add transition because before we couldn't add several conditions.
+		from.addTransition(transition);
 	}
 	
 	public void setInitialState(State state) {
