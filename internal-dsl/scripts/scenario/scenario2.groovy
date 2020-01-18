@@ -18,5 +18,5 @@ from "transitionButton2" to "on" when "button1" becomes "high"
 from "off" to "transitionButton1" when "button1" becomes "high"
 from "off" to "transitionButton2" when "button2" becomes "high"
 
-export "Switch!"
+export "dualCheckAlarm"
 

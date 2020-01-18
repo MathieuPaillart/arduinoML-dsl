@@ -12,4 +12,4 @@ from "noise" to "ledOn" when "button" becomes "high"
 from "ledOn" to "off" when "button" becomes "high"
 from "off" to "noise" when "button" becomes "high"
 
-export "Switch!"
+export "multiStateAlarm"
