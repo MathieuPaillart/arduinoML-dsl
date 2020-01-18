@@ -1,8 +1,8 @@
-package fr.unice.polytech.arduinoMLdsl;
+package fr.unice.polytech.arduinomldsl;
 
 import dsl.ArduinoMLLexer;
 import dsl.ArduinoMLParser;
-import fr.unice.polytech.arduinoMLdsl.visitor.antlr.ModelBuilder;
+import fr.unice.polytech.arduinomldsl.visitor.antlr.ModelBuilder;
 import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.generator.ToWiring;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;

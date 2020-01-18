@@ -1,4 +1,4 @@
-package fr.unice.polytech.arduinoMLdsl.visitor.antlr;
+package fr.unice.polytech.arduinomldsl.visitor.antlr;
 
 import dsl.ArduinoMLBaseListener;
 import dsl.ArduinoMLParser;

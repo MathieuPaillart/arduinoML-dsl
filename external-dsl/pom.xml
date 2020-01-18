@@ -74,7 +74,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>fr.unice.polytech.arduinoMLdsl.Main</mainClass>
+                    <mainClass>fr.unice.polytech.arduinomldsl.Main</mainClass>
                     <executable>java</executable>
                 </configuration>
             </plugin>
