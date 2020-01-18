@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ public class Main {
         System.out.println("\n\nRunning the ANTLR compiler for ArduinoML");
         File file = new File(Main.class.getClassLoader().getResource("scenario").getFile());
         List<Path> listOfFiles = Arrays.stream(file.listFiles()).map(File::toPath).collect(Collectors.toList());
+        Collections.sort(listOfFiles);
         for (int i = 0; i < listOfFiles.size(); i++) {
             CharStream stream = getCharStream(listOfFiles.get(i));
             App theApp = buildModel(stream);
