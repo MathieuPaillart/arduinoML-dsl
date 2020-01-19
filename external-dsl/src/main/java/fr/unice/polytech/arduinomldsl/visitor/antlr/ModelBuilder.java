@@ -125,8 +125,8 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         // Creating a placeholder as the next state might not have been compiled yet.
         Binding toBeResolvedLater = new Binding();
         toBeResolvedLater.to = ctx.next.getText();
-        toBeResolvedLater.trigger = sensors.get(ctx.trigger.getText());
-        toBeResolvedLater.value = SIGNAL.valueOf(ctx.value.getText());
+        if (ctx.trigger != null) toBeResolvedLater.trigger = sensors.get(ctx.trigger.getText());
+        if (ctx.value != null) toBeResolvedLater.value = SIGNAL.valueOf(ctx.value.getText());
         currentBindings.add(toBeResolvedLater);
     }
 

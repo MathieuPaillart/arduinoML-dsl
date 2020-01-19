@@ -14,9 +14,11 @@ import io.github.mosser.arduinoml.kernel.structural.Sensor;
 public class ToWiring extends Visitor<StringBuffer> {
 
 	private final static String CURRENT_STATE = "current_state";
+	private boolean noCondition;
 
 	public ToWiring() {
 		this.result = new StringBuffer();
+		noCondition = false;
 	}
 
 	private void w(String s) {
@@ -80,22 +82,30 @@ public class ToWiring extends Visitor<StringBuffer> {
 			transition.accept(this);
 		}
 
-		if (!state.getTransitions().isEmpty()) {
-			w("{");
-		}
-		w(String.format("    state_%s();", state.getName()));
-		if (!state.getTransitions().isEmpty()) {
-			w("  }");
+		if (!noCondition) {
+			if (!state.getTransitions().isEmpty()) {
+				w("{");
+			}
+			w(String.format("    state_%s();", state.getName()));
+			if (!state.getTransitions().isEmpty()) {
+				w("  }");
+			}
 		}
 		w("}\n");
 	}
 
 	@Override
 	public void visit(Transition transition) {
-		w(String.format("if( digitalRead(%d) == %s && guard ) {", transition.getSensor().getPin(), transition.getValue()));
-		w("    time = millis();");
-		w(String.format("    state_%s();", transition.getNext().getName()));
-		w("  } else ", false);
+		if (transition.getSensor() == null || transition.getValue() == null) {
+			w(String.format("state_%s();", transition.getNext().getName()));
+			noCondition = true;
+		} else {
+			w(String.format("if( digitalRead(%d) == %s && guard ) {", transition.getSensor().getPin(), transition.getValue()));
+			w("    time = millis();");
+			w(String.format("    state_%s();", transition.getNext().getName()));
+			w("  } else ", false);
+			noCondition = false;
+		}
 	}
 
 	@Override
