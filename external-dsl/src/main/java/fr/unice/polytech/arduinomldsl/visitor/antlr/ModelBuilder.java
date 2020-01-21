@@ -2,13 +2,13 @@ package fr.unice.polytech.arduinomldsl.visitor.antlr;
 
 import dsl.ArduinoMLBaseListener;
 import dsl.ArduinoMLParser;
-import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.behavioral.Action;
-import io.github.mosser.arduinoml.kernel.behavioral.State;
-import io.github.mosser.arduinoml.kernel.behavioral.Transition;
-import io.github.mosser.arduinoml.kernel.structural.Actuator;
-import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
-import io.github.mosser.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.arduinoml.kernel.App;
+import fr.unice.polytech.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.arduinoml.kernel.behavioral.State;
+import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL;
+import fr.unice.polytech.arduinoml.kernel.structural.Sensor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +78,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         Sensor sensor = new Sensor();
         sensor.setName(ctx.location().id.getText());
         sensor.setPin(Integer.parseInt(ctx.location().port.getText()));
-        this.theApp.getBricks().add(sensor);
+        this.theApp.getComponents().add(sensor);
         sensors.put(sensor.getName(), sensor);
     }
 
@@ -88,7 +88,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         Actuator actuator = new Actuator();
         actuator.setName(ctx.location().id.getText());
         actuator.setPin(Integer.parseInt(ctx.location().port.getText()));
-        this.theApp.getBricks().add(actuator);
+        this.theApp.getComponents().add(actuator);
         actuators.put(actuator.getName(), actuator);
     }
 

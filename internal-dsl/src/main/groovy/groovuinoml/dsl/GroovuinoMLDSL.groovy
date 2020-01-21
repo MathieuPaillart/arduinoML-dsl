@@ -2,7 +2,7 @@ package main.groovy.groovuinoml.dsl
 
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
-import io.github.mosser.arduinoml.kernel.structural.SIGNAL
+import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
 
 class GroovuinoMLDSL {
 	private GroovyShell shell

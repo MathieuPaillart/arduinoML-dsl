@@ -10,7 +10,7 @@
     <description>External/Internal DSLs for ArduinoML</description>
 
     <modules>
-        <module>kernels/jvm</module>
+        <module>kernels</module>
         <module>external-dsl</module>
         <module>internal-dsl</module>
     </modules>

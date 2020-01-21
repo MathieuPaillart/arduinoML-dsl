@@ -1,6 +1,6 @@
 application dualCheckAlarm
 
-# Declaring bricks
+# Declaring components
 sensor button1: 9
 sensor button2: 10
 actuator buzzer: 11

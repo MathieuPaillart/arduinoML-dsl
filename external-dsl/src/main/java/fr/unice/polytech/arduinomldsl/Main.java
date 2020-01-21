@@ -2,10 +2,10 @@ package fr.unice.polytech.arduinomldsl;
 
 import dsl.ArduinoMLLexer;
 import dsl.ArduinoMLParser;
+import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
 import fr.unice.polytech.arduinomldsl.visitor.antlr.ModelBuilder;
-import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.generator.ToWiring;
-import io.github.mosser.arduinoml.kernel.generator.Visitor;
+import fr.unice.polytech.arduinoml.kernel.App;
+import fr.unice.polytech.arduinoml.kernel.generator.ArduinoCodeGenVisitor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -61,7 +61,7 @@ public class Main {
     }
 
     private static void exportToCode(App theApp, int fileNumber) throws IOException {
-        Visitor codeGenerator = new ToWiring();
+        CodeGenVisitor codeGenerator = new ArduinoCodeGenVisitor();
         theApp.accept(codeGenerator);
         Object content = codeGenerator.getResult();
         File file = new File(Main.class.getClassLoader().getResource("result").getFile());

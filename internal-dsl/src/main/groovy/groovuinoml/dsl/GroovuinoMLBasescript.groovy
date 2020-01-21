@@ -1,11 +1,13 @@
 package main.groovy.groovuinoml.dsl
 
-import io.github.mosser.arduinoml.kernel.behavioral.Action
-import io.github.mosser.arduinoml.kernel.behavioral.State
-import io.github.mosser.arduinoml.kernel.behavioral.Transition
-import io.github.mosser.arduinoml.kernel.structural.Actuator
-import io.github.mosser.arduinoml.kernel.structural.SIGNAL
-import io.github.mosser.arduinoml.kernel.structural.Sensor
+
+import fr.unice.polytech.arduinoml.kernel.behavioral.Action
+import fr.unice.polytech.arduinoml.kernel.behavioral.State
+import fr.unice.polytech.arduinoml.kernel.structural.Actuator
+import fr.unice.polytech.arduinoml.kernel.behavioral.Transition
+import fr.unice.polytech.arduinoml.kernel.structural.Sensor
+import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
+
 
 abstract class GroovuinoMLBasescript extends Script {
     // sensor "name" pin n

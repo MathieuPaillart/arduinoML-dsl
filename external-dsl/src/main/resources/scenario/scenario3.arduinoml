@@ -1,6 +1,6 @@
 application stateBasedAlarm
 
-# Declaring bricks
+# Declaring components
 sensor button: 9
 actuator led: 12
 

@@ -1,6 +1,6 @@
 application verySimpleAlarm
 
-# Declaring bricks
+# Declaring components
 sensor button: 9
 actuator led: 12
 actuator buzzer: 11
