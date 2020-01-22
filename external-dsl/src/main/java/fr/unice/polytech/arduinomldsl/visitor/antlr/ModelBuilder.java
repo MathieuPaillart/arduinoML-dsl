@@ -133,7 +133,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     public void enterAction(ArduinoMLParser.ActionContext ctx) {
         System.out.println("------------------- enterAction --------------------");
         boolean isLcdAction = ctx.actionLCD() != null;
-        String value = isLcdAction ? ctx.actionLCD().value.getText() : ctx.otherAction().value.getText();
+        String value = isLcdAction ? ctx.actionLCD().value.getText() : ctx.actionAssignment().value.getText();
         String receiver = ctx.receiver.getText();
 
         System.out.println("action " + receiver + " " + value);

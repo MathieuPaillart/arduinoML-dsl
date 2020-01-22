@@ -1,18 +1,58 @@
 @startuml
+skinparam linetype polyline
+' Inheritance
 Component <|-- Actuator
 Component <|-- Sensor
 Component <|-- LCD
-
 NamedElement <|-- Component
+NamedElement <|-- State
+NamedElement <|-- App
+Action <|-- ActionActuator
+Action <|-- ActionLcd
 
+' Abstract Class Declaration
 abstract class NamedElement{
-  String name
+  name : String
+  }
+abstract class Action{
+   value : String
+   component : Component
 }
-class Component {
-  String pin
+abstract class Component {
+  pin : String
+}
+' Class Declaration
+class App {
+}
+class Transition {
+    next : State
+    signal : SIGNAL
+}
+' Enum Declaration
+enum SIGNAL {
+   HIGH
+   LOW
 }
 
+' All attributes
+App -- "*" Component : components
+App -- "*" LCD : lcds
+App -- "*" State : states
+State -- "*" Action : actions
+State -- "*" Transition : transitions
+
+' Hide methods
 hide Component methods
+hide Action methods
+hide SIGNAL methods
+hide Transition methods
 hide NamedElement methods
-
+' Hide members
+hide ActionActuator members
+hide LCD members
+hide ActionLcd members
+hide Sensor members
+hide App members
+hide Actuator members
+hide State members
 @enduml
