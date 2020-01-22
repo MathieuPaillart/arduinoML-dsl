@@ -148,7 +148,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
                 action.setValue(value);
             }
         } else {
-            action = new ActionActuator();
+            action = new ActionNumericAssignment();
             action.setValue(value);
         }
         action.setComponent(component);

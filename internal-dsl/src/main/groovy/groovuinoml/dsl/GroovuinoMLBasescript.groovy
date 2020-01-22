@@ -1,7 +1,7 @@
 package main.groovy.groovuinoml.dsl
 
 import fr.unice.polytech.arduinoml.kernel.behavioral.Action
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionActuator
+import fr.unice.polytech.arduinoml.kernel.behavioral.ActionNumericAssignment
 import fr.unice.polytech.arduinoml.kernel.behavioral.State
 import fr.unice.polytech.arduinoml.kernel.behavioral.Transition
 import fr.unice.polytech.arduinoml.kernel.structural.Actuator
@@ -28,7 +28,7 @@ abstract class GroovuinoMLBasescript extends Script {
         def closure
         closure = { actuator ->
             [becomes: { signal ->
-                Action action = new ActionActuator();
+                Action action = new ActionNumericAssignment()
                 action.setComponent(actuator instanceof String ? (Actuator) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (Actuator) actuator)
                 action.setValue(signal instanceof String ? (SIGNAL) ((GroovuinoMLBinding) this.getBinding()).getVariable(signal) : (SIGNAL) signal)
                 actions.add(action)
