@@ -1,0 +1,11 @@
+application lcdDo
+
+# Declaring Bricks
+sensor button: 9
+lcd ecranLCD: 1
+
+# Declaring States
+-> write {
+  ecranLCD print button
+  => write
+}

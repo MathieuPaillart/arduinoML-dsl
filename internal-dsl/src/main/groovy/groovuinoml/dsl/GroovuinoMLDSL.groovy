@@ -1,8 +1,11 @@
 package main.groovy.groovuinoml.dsl
 
+import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
+import main.groovy.groovuinoml.dsl.GroovuinoMLBasescript
+import main.groovy.groovuinoml.dsl.GroovuinoMLBinding
+import main.groovy.groovuinoml.dsl.GroovuinoMLModel
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
-import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
 
 class GroovuinoMLDSL {
 	private GroovyShell shell

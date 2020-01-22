@@ -1,0 +1,18 @@
+@startuml
+Component <|-- Actuator
+Component <|-- Sensor
+Component <|-- LCD
+
+NamedElement <|-- Component
+
+abstract class NamedElement{
+  String name
+}
+class Component {
+  String pin
+}
+
+hide Component methods
+hide NamedElement methods
+
+@enduml

@@ -1,13 +1,12 @@
 package main.groovy.groovuinoml.dsl
 
-
 import fr.unice.polytech.arduinoml.kernel.behavioral.Action
+import fr.unice.polytech.arduinoml.kernel.behavioral.ActionActuator
 import fr.unice.polytech.arduinoml.kernel.behavioral.State
-import fr.unice.polytech.arduinoml.kernel.structural.Actuator
 import fr.unice.polytech.arduinoml.kernel.behavioral.Transition
-import fr.unice.polytech.arduinoml.kernel.structural.Sensor
+import fr.unice.polytech.arduinoml.kernel.structural.Actuator
 import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
-
+import fr.unice.polytech.arduinoml.kernel.structural.Sensor
 
 abstract class GroovuinoMLBasescript extends Script {
     // sensor "name" pin n
@@ -29,8 +28,8 @@ abstract class GroovuinoMLBasescript extends Script {
         def closure
         closure = { actuator ->
             [becomes: { signal ->
-                Action action = new Action()
-                action.setActuator(actuator instanceof String ? (Actuator) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (Actuator) actuator)
+                Action action = new ActionActuator();
+                action.setComponent(actuator instanceof String ? (Actuator) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (Actuator) actuator)
                 action.setValue(signal instanceof String ? (SIGNAL) ((GroovuinoMLBinding) this.getBinding()).getVariable(signal) : (SIGNAL) signal)
                 actions.add(action)
                 [and: closure]

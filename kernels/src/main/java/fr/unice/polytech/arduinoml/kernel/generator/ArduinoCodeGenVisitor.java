@@ -1,11 +1,10 @@
 package fr.unice.polytech.arduinoml.kernel.generator;
 
 import fr.unice.polytech.arduinoml.kernel.App;
-import fr.unice.polytech.arduinoml.kernel.behavioral.Action;
-import fr.unice.polytech.arduinoml.kernel.behavioral.State;
-import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.arduinoml.kernel.behavioral.*;
 import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.arduinoml.kernel.structural.Component;
+import fr.unice.polytech.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.arduinoml.kernel.structural.Sensor;
 
 /**
@@ -56,6 +55,12 @@ public class ArduinoCodeGenVisitor extends CodeGenVisitor<StringBuffer> {
 		writeCode("// Wiring code generated from an ArduinoML model");
 		writeCode(String.format("// Application name: %s\n", app.getName()));
 
+		if (!app.getLcds().isEmpty()) {
+			writeCode("#include <LiquidCrystal.h>");
+			for (LCD lcd : app.getLcds()) {
+				writeCode(String.format("LiquidCrystal %s(10, 11, 12, 13, 14, 15, 16);", lcd.getName()));
+			}
+		}
 		writeCode("void setup(){");
 		for (Component component : app.getComponents()) {
 			component.accept(this);
@@ -119,6 +124,11 @@ public class ArduinoCodeGenVisitor extends CodeGenVisitor<StringBuffer> {
 		writeCode("}\n");
 	}
 
+	@Override
+	public void visit(LCD lcd) {
+		writeCode(String.format("  %s.begin(16, 2); // set up the LCD's number of columns and rows", lcd.getName()));
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -137,12 +147,27 @@ public class ArduinoCodeGenVisitor extends CodeGenVisitor<StringBuffer> {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public void visitAction(Action action) {
-		writeCode(String.format("  digitalWrite(%d,%s);", action.getActuator().getPin(), action.getValue()));
+	public void visit(ActionActuator actionActuator) {
+		writeCode(String.format("  digitalWrite(%d,%s);", actionActuator.getComponent().getPin(), actionActuator.getValue()));
+	}
+
+	@Override
+	public void visit(ActionLcd actionLcd) {
+		Object value;
+		if (isNumeric(actionLcd.getValue())) {
+			value = Integer.parseInt(actionLcd.getValue());
+		} else {
+			value = "\"" + actionLcd.getValue() + "\"";
+		}
+		writeCode("  delay(30);");
+		writeCode(String.format("  %s.setCursor(0, 0);", actionLcd.getComponent().getName()));
+		writeCode(String.format("  %s.clear();", actionLcd.getComponent().getName()));
+		writeCode(String.format("  %s.print(digitalRead(%s));", actionLcd.getComponent().getName(), value));
+	}
+
+	private boolean isNumeric(String str) {
+		return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 
 }

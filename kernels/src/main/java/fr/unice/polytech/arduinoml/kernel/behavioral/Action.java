@@ -1,32 +1,24 @@
 package fr.unice.polytech.arduinoml.kernel.behavioral;
 
-import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL;
 import fr.unice.polytech.arduinoml.kernel.generator.Visitable;
-import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.Component;
 import lombok.Data;
 
 /**
  * Arduino action that modify an actuator value.
  */
 @Data
-public class Action implements Visitable {
+public abstract class Action implements Visitable {
 
-	/**
-	 * The signal.
-	 */
-	private SIGNAL value;
+    /**
+     * A value filled by user.
+     */
+    String value;
+    /**
+     * A component (can be LCD or Actuator)
+     */
+    private Component component;
 
-	/**
-	 * The actuator
-	 */
-	private Actuator actuator;
+    public abstract void setValue(String value);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void accept(CodeGenVisitor codeGenVisitor) {
-		codeGenVisitor.visitAction(this);
-	}
 }

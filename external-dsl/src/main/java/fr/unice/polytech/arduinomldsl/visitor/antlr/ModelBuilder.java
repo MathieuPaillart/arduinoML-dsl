@@ -3,12 +3,9 @@ package fr.unice.polytech.arduinomldsl.visitor.antlr;
 import dsl.ArduinoMLBaseListener;
 import dsl.ArduinoMLParser;
 import fr.unice.polytech.arduinoml.kernel.App;
-import fr.unice.polytech.arduinoml.kernel.behavioral.Action;
-import fr.unice.polytech.arduinoml.kernel.behavioral.State;
-import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
-import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
-import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL;
-import fr.unice.polytech.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.arduinoml.kernel.behavioral.*;
+import fr.unice.polytech.arduinoml.kernel.structural.*;
+import fr.unice.polytech.arduinomldsl.exception.BusNonExistentException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +26,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     private Map<String, Sensor> sensors = new HashMap<>();
     private Map<String, Actuator> actuators = new HashMap<>();
+    private Map<String, LCD> lcds = new HashMap<>();
     private Map<String, State> states = new HashMap<>();
     private Map<String, List<Binding>> bindings = new HashMap<>();
     private List<Binding> currentBindings = new ArrayList<>();
@@ -69,12 +67,14 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     @Override
     public void enterDeclaration(ArduinoMLParser.DeclarationContext ctx) {
         System.out.println("------------------- enterDeclaration --------------------");
+        System.out.println(ctx.name.getText());
         theApp.setName(ctx.name.getText());
     }
 
     @Override
     public void enterSensor(ArduinoMLParser.SensorContext ctx) {
         System.out.println("------------------- enterSensor --------------------");
+        System.out.println("sensor " + ctx.location().id.getText() + " " + ctx.location().port.getText());
         Sensor sensor = new Sensor();
         sensor.setName(ctx.location().id.getText());
         sensor.setPin(Integer.parseInt(ctx.location().port.getText()));
@@ -85,6 +85,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     @Override
     public void enterActuator(ArduinoMLParser.ActuatorContext ctx) {
         System.out.println("------------------- enterActuator --------------------");
+        System.out.println("actuator " + ctx.location().id.getText() + " " + ctx.location().port.getText());
         Actuator actuator = new Actuator();
         actuator.setName(ctx.location().id.getText());
         actuator.setPin(Integer.parseInt(ctx.location().port.getText()));
@@ -93,8 +94,26 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     }
 
     @Override
+    public void enterLcd(ArduinoMLParser.LcdContext ctx) {
+        System.out.println("------------------- enterLcd --------------------");
+        System.out.println("lcd " + ctx.location().id.getText() + " " + ctx.location().port.getText());
+        LCD lcd = new LCD();
+        lcd.setName(ctx.location().id.getText());
+
+        int busNumber = Integer.parseInt(ctx.location().port.getText());
+        if (busNumber > 3)
+            throw new BusNonExistentException("the bus number :" + busNumber + "specified isn't supported in arduino ");
+
+        lcd.setPin(Integer.parseInt(ctx.location().port.getText()));
+        this.theApp.addLCD(lcd);
+        lcds.put(lcd.getName(), lcd);
+    }
+
+
+    @Override
     public void enterState(ArduinoMLParser.StateContext ctx) {
         System.out.println("------------------- enterState --------------------");
+        System.out.println("state " + ctx.name.getText());
         State local = new State();
         local.setName(ctx.name.getText());
         this.currentState = local;
@@ -113,9 +132,26 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     @Override
     public void enterAction(ArduinoMLParser.ActionContext ctx) {
         System.out.println("------------------- enterAction --------------------");
-        Action action = new Action();
-        action.setActuator(actuators.get(ctx.receiver.getText()));
-        action.setValue(SIGNAL.valueOf(ctx.value.getText()));
+        boolean isLcdAction = ctx.actionLCD() != null;
+        String value = isLcdAction ? ctx.actionLCD().value.getText() : ctx.otherAction().value.getText();
+        String receiver = ctx.receiver.getText();
+
+        System.out.println("action " + receiver + " " + value);
+
+        Component component = actuators.containsKey(receiver) ? actuators.get(receiver) : lcds.get(receiver);
+        Action action;
+        if (isLcdAction) {
+            action = new ActionLcd();
+            if (isSensorReference(value)) {
+                action.setValue(String.valueOf(sensors.get(value).getPin()));
+            } else {
+                action.setValue(value);
+            }
+        } else {
+            action = new ActionActuator();
+            action.setValue(value);
+        }
+        action.setComponent(component);
         currentState.getActions().add(action);
     }
 
@@ -142,5 +178,8 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         SIGNAL value;
     }
 
+    private boolean isSensorReference(String name) {
+        return sensors.containsKey(name);
+    }
 }
 

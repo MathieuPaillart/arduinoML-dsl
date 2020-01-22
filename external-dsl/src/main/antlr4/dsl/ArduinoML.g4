@@ -9,14 +9,17 @@ root            :   declaration bricks states EOF;
 
 declaration     :   'application' name=IDENTIFIER;
 
-bricks          :   (sensor|actuator)+;
+bricks          :   (sensor|actuator|lcd)+;
     sensor      :   'sensor'   location ;
     actuator    :   'actuator' location ;
+    lcd         :   'lcd'      location ;
     location    :   id=IDENTIFIER ':' port=PORT_NUMBER;
 
 states          :   state+;
     state       :   initial? name=IDENTIFIER '{'  action+ transition+ '}';
-    action      :   receiver=IDENTIFIER '<=' value=SIGNAL;
+    action      :   receiver=IDENTIFIER (actionLCD | otherAction);
+    actionLCD   :   'print' value=IDENTIFIER|STRING;
+    otherAction :   '<=' value=SIGNAL;
     transition  :   (trigger=IDENTIFIER 'is' value=SIGNAL)? '=>' next=IDENTIFIER ;
     initial     :   '->';
 
@@ -26,6 +29,7 @@ states          :   state+;
 
 PORT_NUMBER     :   [1-9] | '10' | '11' | '12';
 IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE|DIGIT)+;
+STRING          :   '"' IDENTIFIER '"';
 SIGNAL          :   'HIGH' | 'LOW';
 
 /*************
@@ -38,4 +42,4 @@ fragment DIGIT      : [0-9];
 NEWLINE             : ('\r'? '\n' | '\r')+      -> skip;
 WS                  : ((' ' | '\t')+)           -> skip;     // who cares about whitespaces?
 COMMENT             : '#' ~( '\r' | '\n' )*     -> skip;     // Single line comments, starting with a #
-/** -> channel(HIDDEN); instead of skip if you don't want to parse whitespaces at al.
+/** -> channel(HIDDEN); instead of skip if you don't want to parse whitespaces at all.

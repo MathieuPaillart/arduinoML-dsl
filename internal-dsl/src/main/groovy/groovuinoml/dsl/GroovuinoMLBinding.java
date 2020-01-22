@@ -1,15 +1,15 @@
 package main.groovy.groovuinoml.dsl;
 
-import java.util.Map;
-
 import groovy.lang.Binding;
 import groovy.lang.Script;
+
+import java.util.Map;
 
 public class GroovuinoMLBinding extends Binding {
 	// can be useful to return the script in case of syntax trick
 	private Script script;
-	
-	private GroovuinoMLModel model;
+
+	private main.groovy.groovuinoml.dsl.GroovuinoMLModel model;
 	
 	public GroovuinoMLBinding() {
 		super();
@@ -28,8 +28,8 @@ public class GroovuinoMLBinding extends Binding {
 	public void setScript(Script script) {
 		this.script = script;
 	}
-	
-	public void setGroovuinoMLModel(GroovuinoMLModel model) {
+
+	public void setGroovuinoMLModel(main.groovy.groovuinoml.dsl.GroovuinoMLModel model) {
 		this.model = model;
 	}
 	
