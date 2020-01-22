@@ -148,8 +148,8 @@ public class ArduinoCodeGenVisitor extends CodeGenVisitor<StringBuffer> {
 	}
 
 	@Override
-	public void visit(ActionActuator actionActuator) {
-		writeCode(String.format("  digitalWrite(%d,%s);", actionActuator.getComponent().getPin(), actionActuator.getValue()));
+	public void visit(ActionNumericAssignment actionNumericAssignment) {
+		writeCode(String.format("  digitalWrite(%d,%s);", actionNumericAssignment.getComponent().getPin(), actionNumericAssignment.getValue()));
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package fr.unice.polytech.arduinoml.kernel.generator;
 
 import fr.unice.polytech.arduinoml.kernel.App;
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionActuator;
 import fr.unice.polytech.arduinoml.kernel.behavioral.ActionLcd;
+import fr.unice.polytech.arduinoml.kernel.behavioral.ActionNumericAssignment;
 import fr.unice.polytech.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
@@ -67,9 +67,9 @@ public abstract class CodeGenVisitor<T> {
     /**
      * Visits an Action containing a component that is a actuator.
      *
-     * @param actionActuator the action
+     * @param actionNumericAssignment the action
      */
-    public abstract void visit(ActionActuator actionActuator);
+    public abstract void visit(ActionNumericAssignment actionNumericAssignment);
 
     /**
      * Visits an Actuator.

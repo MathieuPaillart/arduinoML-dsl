@@ -8,17 +8,19 @@ import lombok.Data;
  * Arduino action that modify an actuator value.
  */
 @Data
-public abstract class Action implements Visitable {
+public abstract class Action<T> implements Visitable {
 
     /**
      * A value filled by user.
      */
-    String value;
+    T value;
     /**
      * A component (can be LCD or Actuator)
      */
     private Component component;
 
-    public abstract void setValue(String value);
+    public void setValue(T value) {
+        this.value = value;
+    }
 
 }
