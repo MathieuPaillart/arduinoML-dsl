@@ -105,7 +105,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
             throw new BusNonExistentException("the bus number :" + busNumber + "specified isn't supported in arduino ");
 
         lcd.setPin(Integer.parseInt(ctx.location().port.getText()));
-        this.theApp.addLCD(lcd);
+        this.theApp.getComponents().add(lcd);
         lcds.put(lcd.getName(), lcd);
     }
 

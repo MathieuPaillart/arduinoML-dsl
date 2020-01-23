@@ -53,15 +53,23 @@ public class ArduinoCodeGenVisitor extends CodeGenVisitor<StringBuffer> {
 	@Override
 	public void visitApp(final App app) {
 		writeCode("// Wiring code generated from an ArduinoML model");
-		writeCode(String.format("// Application name: %s\n", app.getName()));
+		writeCode(String.format("// Application name: %s%n", app.getName()));
 
-		if (!app.getLcds().isEmpty()) {
+		if (app.getComponents().stream().anyMatch(component -> component instanceof LCD)) {
 			writeCode("#include <LiquidCrystal.h>");
-			for (LCD lcd : app.getLcds()) {
-				writeCode(String.format("LiquidCrystal %s(10, 11, 12, 13, 14, 15, 16);", lcd.getName()));
-			}
+			app.getComponents().stream()
+					.filter(component -> component instanceof LCD)
+					.forEach(lcd -> {
+						if (lcd.getPin() == 1) {
+							writeCode(String.format("LiquidCrystal %s(2, 3, 4, 5, 6, 7, 8);", lcd.getName()));
+						} else if (lcd.getPin() == 2) {
+							writeCode(String.format("LiquidCrystal %s(10, 11, 12, 13, 14, 15, 16);", lcd.getName()));
+						}
+					});
+			writeCode("", true);
 		}
-		writeCode("void setup(){");
+
+		writeCode("void setup() {");
 		for (Component component : app.getComponents()) {
 			component.accept(this);
 		}

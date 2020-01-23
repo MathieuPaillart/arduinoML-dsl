@@ -18,7 +18,6 @@ import java.util.List;
 public class GroovuinoMLModel {
 
 	private List<Component> components;
-	private List<LCD> lcds;
 	private List<State> states;
 	private State initialState;
 
@@ -27,7 +26,6 @@ public class GroovuinoMLModel {
 	public GroovuinoMLModel(Binding binding) {
 		this.components = new ArrayList<Component>();
 		this.states = new ArrayList<State>();
-		this.lcds = new ArrayList<>();
 		this.binding = binding;
 	}
 	
@@ -56,7 +54,6 @@ public class GroovuinoMLModel {
 		lcd.setName(name);
 		lcd.setPin(busNumber);
 		this.components.add(lcd);
-		this.lcds.add(lcd);
 		this.binding.setVariable(name, lcd);
 	}
 
@@ -82,7 +79,6 @@ public class GroovuinoMLModel {
 		App app = new App();
 		app.setName(appName);
 		app.setComponents(this.components);
-		app.setLcds(this.lcds);
 		app.setStates(this.states);
 		app.setInitial(this.initialState);
 		CodeGenVisitor codeGenerator = new ArduinoCodeGenVisitor();
