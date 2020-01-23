@@ -1,10 +1,8 @@
 package main.groovy.groovuinoml.dsl
 
-import fr.unice.polytech.arduinoml.kernel.behavioral.Action
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionNumericAssignment
-import fr.unice.polytech.arduinoml.kernel.behavioral.State
-import fr.unice.polytech.arduinoml.kernel.behavioral.Transition
+import fr.unice.polytech.arduinoml.kernel.behavioral.*
 import fr.unice.polytech.arduinoml.kernel.structural.Actuator
+import fr.unice.polytech.arduinoml.kernel.structural.LCD
 import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
 import fr.unice.polytech.arduinoml.kernel.structural.Sensor
 
@@ -20,6 +18,11 @@ abstract class GroovuinoMLBasescript extends Script {
         [pin: { n -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createActuator(name, n) }]
     }
 
+    def lcd(String name) {
+        [bus  : { n -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createLCD(name, n) },
+         onBus: { n -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createLCD(name, n) }]
+    }
+
     // state "name" means actuator becomes signal [and actuator becomes signal]*n
     def state(String name) {
         List<Action> actions = new ArrayList<Action>()
@@ -33,7 +36,14 @@ abstract class GroovuinoMLBasescript extends Script {
                 action.setValue(signal instanceof String ? (SIGNAL) ((GroovuinoMLBinding) this.getBinding()).getVariable(signal) : (SIGNAL) signal)
                 actions.add(action)
                 [and: closure]
-            }]
+            },
+             prints : { text ->
+                 Action action = new ActionLcd()
+                 action.setComponent(actuator instanceof String ? (LCD) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (LCD) actuator)
+                 action.setValue(text instanceof Sensor ? ((Sensor) text).getPin().toString() : (String) text)
+                 actions.add(action)
+                 [and: closure]
+             }]
         }
         [means: closure]
     }
