@@ -156,14 +156,14 @@ public class ArduinoCodeGenVisitor extends CodeGenVisitor<StringBuffer> {
 	public void visit(ActionLcd actionLcd) {
 		Object value;
 		if (isNumeric(actionLcd.getValue())) {
-			value = Integer.parseInt(actionLcd.getValue());
+			value = String.format("digitalRead(%s)", Integer.parseInt(actionLcd.getValue()));
 		} else {
-			value = "\"" + actionLcd.getValue() + "\"";
+			value = String.format("\"%s\"", actionLcd.getValue());
 		}
 		writeCode("  delay(30);");
 		writeCode(String.format("  %s.setCursor(0, 0);", actionLcd.getComponent().getName()));
 		writeCode(String.format("  %s.clear();", actionLcd.getComponent().getName()));
-		writeCode(String.format("  %s.print(digitalRead(%s));", actionLcd.getComponent().getName(), value));
+		writeCode(String.format("  %s.print(%s);", actionLcd.getComponent().getName(), value));
 	}
 
 	private boolean isNumeric(String str) {
