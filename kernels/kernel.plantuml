@@ -4,22 +4,28 @@ skinparam linetype polyline
 Component <|-- Actuator
 Component <|-- Sensor
 Component <|-- LCD
-NamedElement <|-- Component
-NamedElement <|-- State
-NamedElement <|-- App
-Action <|-- ActionActuator
+Action <|-- ActionNumericAssignment
 Action <|-- ActionLcd
+Remote <|-- Keyboard
+' NamedElement <|-- Component
+' NamedElement <|-- Remote
+' NamedElement <|-- State
+' NamedElement <|-- App
 
 ' Abstract Class Declaration
 abstract class NamedElement{
   name : String
-  }
-abstract class Action{
+}
+abstract class Action<T> {
    value : String
    component : Component
 }
 abstract class Component {
   pin : Integer
+}
+abstract class Remote {
+}
+class ActionLcd<T> {
 }
 ' Class Declaration
 class App {
@@ -36,6 +42,7 @@ enum SIGNAL {
 
 ' All attributes
 App -- "*" Component : components
+App -- "1" Remote : remote
 App -- "*" LCD : lcds
 App -- "*" State : states
 State -- "*" Action : actions
@@ -48,7 +55,6 @@ hide SIGNAL methods
 hide Transition methods
 hide NamedElement methods
 ' Hide members
-hide ActionActuator members
 hide LCD members
 hide ActionLcd members
 hide Sensor members

@@ -1,11 +1,9 @@
 package fr.unice.polytech.arduinoml.kernel.generator;
 
 import fr.unice.polytech.arduinoml.kernel.App;
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionLcd;
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionNumericAssignment;
-import fr.unice.polytech.arduinoml.kernel.behavioral.State;
-import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.arduinoml.kernel.behavioral.*;
 import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.Keyboard;
 import fr.unice.polytech.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.arduinoml.kernel.structural.Sensor;
 
@@ -48,7 +46,7 @@ public abstract class CodeGenVisitor<T> {
      *
      * @param lcd the transition
      */
-    public abstract void visit(LCD lcd);
+    public abstract void visitLCD(LCD lcd);
 
     /**
      * Visits a FSM transition.
@@ -62,7 +60,7 @@ public abstract class CodeGenVisitor<T> {
      *
      * @param actionLcd the action
      */
-    public abstract void visit(ActionLcd actionLcd);
+    public abstract void visitActionLCD(ActionLcd actionLcd);
 
     /**
      * Visits an Action containing a component that is a actuator.
@@ -84,6 +82,20 @@ public abstract class CodeGenVisitor<T> {
      * @param sensor the sensor
      */
     public abstract void visitSensor(Sensor sensor);
+
+    /**
+     * Visits a keyboard.
+     *
+     * @param keyboard the keyboard
+     */
+    public abstract void visitKeyboard(Keyboard keyboard);
+
+    /**
+     * Visits an Action of remote assignement.
+     *
+     * @param action the keyboard
+     */
+    public abstract void visitActionRemote(ActionRemoteAssignment action);
 
     /**
      * Get the result.
