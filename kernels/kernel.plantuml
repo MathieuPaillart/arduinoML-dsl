@@ -19,7 +19,7 @@ abstract class Action{
    component : Component
 }
 abstract class Component {
-  pin : String
+  pin : Integer
 }
 ' Class Declaration
 class App {

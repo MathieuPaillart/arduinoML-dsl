@@ -35,6 +35,9 @@ public class App extends NamedElement implements Visitable {
 	 */
 	private State initial;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void accept(CodeGenVisitor codeGenVisitor) {
 		codeGenVisitor.visitApp(this);

@@ -18,7 +18,7 @@ bricks          :   (sensor|actuator|lcd)+;
 states          :   state+;
     state       :   initial? name=IDENTIFIER '{'  action+ transition+ '}';
     action      :   receiver=IDENTIFIER (actionLCD | actionAssignment);
-    actionLCD   :   'print' value=IDENTIFIER|STRING;
+    actionLCD   :   'print' value=(IDENTIFIER|STRING);
     actionAssignment : '<=' value=SIGNAL;
     transition  :   (trigger=IDENTIFIER 'is' value=SIGNAL)? '=>' next=IDENTIFIER ;
     initial     :   '->';
