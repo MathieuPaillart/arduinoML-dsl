@@ -2,7 +2,9 @@ package main.groovy.groovuinoml.dsl
 
 import fr.unice.polytech.arduinoml.kernel.behavioral.*
 import fr.unice.polytech.arduinoml.kernel.structural.Actuator
+import fr.unice.polytech.arduinoml.kernel.structural.Keyboard
 import fr.unice.polytech.arduinoml.kernel.structural.LCD
+import fr.unice.polytech.arduinoml.kernel.structural.Remote
 import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
 import fr.unice.polytech.arduinoml.kernel.structural.Sensor
 
@@ -18,9 +20,15 @@ abstract class GroovuinoMLBasescript extends Script {
         [pin: { n -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createActuator(name, n) }]
     }
 
+    // lcd "name" bus n
     def lcd(String name) {
         [bus  : { n -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createLCD(name, n) },
          onBus: { n -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createLCD(name, n) }]
+    }
+
+    // keyboard "name" values high low
+    def keyboard(String name) {
+        [values  : { high,low -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createKeyboard(name, high, low) }]
     }
 
     // state "name" means actuator becomes signal [and actuator becomes signal]*n
@@ -31,16 +39,31 @@ abstract class GroovuinoMLBasescript extends Script {
         def closure
         closure = { actuator ->
             [becomes: { signal ->
-                Action action = new ActionNumericAssignment()
-                action.setComponent(actuator instanceof String ? (Actuator) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (Actuator) actuator)
-                action.setValue(signal instanceof String ? (SIGNAL) ((GroovuinoMLBinding) this.getBinding()).getVariable(signal) : (SIGNAL) signal)
-                actions.add(action)
+                // Need to separate behavior between numeric and remote assignment
+                if(signal instanceof Remote) {
+                    Action action = new ActionRemoteAssignment();
+                    action.setComponent(actuator instanceof String ? (Actuator) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (Actuator) actuator)
+                    action.setValue((Keyboard) signal)
+                    actions.add(action)
+                } else {
+                    Action action = new ActionNumericAssignment()
+                    action.setComponent(actuator instanceof String ? (Actuator) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (Actuator) actuator)
+                    action.setValue(signal instanceof String ? (SIGNAL) ((GroovuinoMLBinding) this.getBinding()).getVariable(signal) : (SIGNAL) signal)
+                    actions.add(action)
+                }
                 [and: closure]
             },
              prints : { text ->
+                 // Need to separate behavior between print input
                  Action action = new ActionLcd()
                  action.setComponent(actuator instanceof String ? (LCD) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (LCD) actuator)
-                 action.setValue(text instanceof Sensor ? ((Sensor) text).getPin().toString() : (String) text)
+                 if(text instanceof Sensor) {
+                     action.setValue(((Sensor) text).getPin().toString());
+                 } else if (text instanceof Keyboard) {
+                     action.setValue(((Keyboard) text));
+                 } else {
+                     action.setValue(text);
+                 }
                  actions.add(action)
                  [and: closure]
              }]

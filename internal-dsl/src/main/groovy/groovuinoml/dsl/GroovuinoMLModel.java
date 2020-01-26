@@ -6,10 +6,7 @@ import fr.unice.polytech.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.arduinoml.kernel.generator.ArduinoCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
-import fr.unice.polytech.arduinoml.kernel.structural.Component;
-import fr.unice.polytech.arduinoml.kernel.structural.LCD;
-import fr.unice.polytech.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.arduinoml.kernel.structural.*;
 import groovy.lang.Binding;
 
 import java.util.ArrayList;
@@ -18,14 +15,16 @@ import java.util.List;
 public class GroovuinoMLModel {
 
     private List<Component> components;
+    private List<Remote> remotes;
     private List<State> states;
     private State initialState;
 
     private Binding binding;
 
     public GroovuinoMLModel(Binding binding) {
-        this.components = new ArrayList<Component>();
-        this.states = new ArrayList<State>();
+        this.components = new ArrayList();
+        this.states = new ArrayList();
+        this.remotes = new ArrayList();
         this.binding = binding;
     }
 
@@ -57,6 +56,15 @@ public class GroovuinoMLModel {
 		this.binding.setVariable(name, lcd);
     }
 
+    public void createKeyboard(String name, String high, String low) {
+        final Keyboard keyboard = new Keyboard();
+        keyboard.setName(name);
+        keyboard.setValueHigh(high);
+        keyboard.setValueLow(low);
+        this.remotes.add(keyboard);
+        this.binding.setVariable(name, keyboard);
+    }
+
     public void createState(String name, List<Action> actions) {
         State state = new State();
         state.setName(name);
@@ -79,6 +87,7 @@ public class GroovuinoMLModel {
         App app = new App();
         app.setName(appName);
         app.setComponents(this.components);
+        app.setRemotes(this.remotes);
         app.setStates(this.states);
         app.setInitial(this.initialState);
         CodeGenVisitor codeGenerator = new ArduinoCodeGenVisitor();
