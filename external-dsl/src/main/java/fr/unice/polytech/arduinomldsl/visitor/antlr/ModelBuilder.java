@@ -218,16 +218,20 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         SIGNAL value;
     }
 
+    /**
+     * This method checks at the end of the parsing if all the pin from the different actuator/sensor/lcd are unique
+     * This method is quite long because the error message is meaningful, we know exactly which component's pin is in fault
+     */
     public void resolve() {
         for (Actuator actuator : actuators.values()) {
             if (pins.contains(actuator.getPin())) {
-                throw new PinAlreadyAssignedException("This actuator is using an already assigned pin : " + actuator.getName());
+                throw new PinAlreadyAssignedException(String.format("This actuator %s is using an already assigned pin : %s", actuator.getName(), actuator.getPin()));
             }
             pins.add(actuator.getPin());
         }
         for (Sensor sensor : sensors.values()) {
             if (pins.contains(sensor.getPin())) {
-                throw new PinAlreadyAssignedException("This sensor is using an already assigned pin : " + sensor.getName());
+                throw new PinAlreadyAssignedException(String.format("This sensor %s is using an already assigned pin : %s" + sensor.getName(), sensor.getPin()));
             }
             pins.add(sensor.getPin());
         }
@@ -240,7 +244,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
             }
             pinsForLcd.forEach(pin -> {
                 if (pins.contains(pin)) {
-                    throw new PinAlreadyAssignedException("This lcd is using an already assigned pin : " + lcd.getName());
+                    throw new PinAlreadyAssignedException(String.format("This lcd %s is using an already assigned pin : %s, because he is on the bus number : %s", lcd.getName(), pin, lcd.getPin()));
                 }
                 pins.add(pin);
             });
