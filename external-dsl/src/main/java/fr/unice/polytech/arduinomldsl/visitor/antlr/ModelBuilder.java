@@ -6,6 +6,8 @@ import fr.unice.polytech.arduinoml.kernel.App;
 import fr.unice.polytech.arduinoml.kernel.behavioral.*;
 import fr.unice.polytech.arduinoml.kernel.structural.*;
 import fr.unice.polytech.arduinomldsl.exception.BusNonExistentException;
+import fr.unice.polytech.arduinomldsl.exception.MissingDeclarationOfComponent;
+import fr.unice.polytech.arduinomldsl.exception.OnlyOneKeyboardException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     private Map<String, Sensor> sensors = new HashMap<>();
     private Map<String, Actuator> actuators = new HashMap<>();
     private Map<String, LCD> lcds = new HashMap<>();
+    private Keyboard keyboard = null;
     private Map<String, State> states = new HashMap<>();
     private Map<String, List<Binding>> bindings = new HashMap<>();
     private List<Binding> currentBindings = new ArrayList<>();
@@ -109,6 +112,20 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         lcds.put(lcd.getName(), lcd);
     }
 
+    @Override
+    public void enterKeyboard(ArduinoMLParser.KeyboardContext ctx) {
+        if (keyboard == null) {
+            if (ctx.STRING().isEmpty()) {
+                keyboard = new Keyboard();
+            } else {
+                keyboard = new Keyboard(ctx.STRING().get(0).getText(), ctx.STRING().get(1).getText());
+            }
+            keyboard.setName(ctx.id.getText());
+        } else {
+            throw new OnlyOneKeyboardException("You have declared more than one keyboard, it is not supported");
+        }
+    }
+
 
     @Override
     public void enterState(ArduinoMLParser.StateContext ctx) {
@@ -134,6 +151,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         System.out.println("------------------- enterAction --------------------");
         boolean isLcdAction = ctx.actionLCD() != null;
         String value = isLcdAction ? ctx.actionLCD().value.getText() : ctx.actionAssignment().value.getText();
+        boolean isActionWithKeyboard = isKeyboardReference(value);
         String receiver = ctx.receiver.getText();
 
         System.out.println("action " + receiver + " " + value);
@@ -144,15 +162,33 @@ public class ModelBuilder extends ArduinoMLBaseListener {
             action = new ActionLcd();
             if (isSensorReference(value)) {
                 action.setValue(String.valueOf(sensors.get(value).getPin()));
+            } else if (isActionWithKeyboard) {
+                action.setValue(keyboard);
             } else {
                 action.setValue(value);
             }
         } else {
-            action = new ActionNumericAssignment();
-            action.setValue(value);
+            if (isActionWithKeyboard) {
+                action = new ActionRemoteAssignment();
+                action.setValue(keyboard);
+            } else {
+                action = new ActionNumericAssignment();
+                action.setValue(value);
+            }
         }
         action.setComponent(component);
+        if (action.getComponent() == null) {
+            throw new MissingDeclarationOfComponent(receiver + "is missing from component declaration");
+        }
         currentState.getActions().add(action);
+    }
+
+    private boolean isKeyboardReference(String value) {
+        return keyboard != null && keyboard.getName().equals(value);
+    }
+
+    private boolean isSensorReference(String name) {
+        return sensors.containsKey(name);
     }
 
     @Override
@@ -178,8 +214,5 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         SIGNAL value;
     }
 
-    private boolean isSensorReference(String name) {
-        return sensors.containsKey(name);
-    }
 }
 

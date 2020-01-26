@@ -121,9 +121,9 @@ public class ArduinoCodeGenVisitor extends CodeGenVisitor<StringBuffer> {
 		writeCode("  while(true) {");
 		writeCode("    if(Serial.available()>0) {");
 		writeCode("      String in = Serial.readStringUntil('\\n');");
-		writeCode(String.format("      if(in == \"%s\") {", action.getValue().getValueHigh()));
+		writeCode(String.format("      if(in == %s) {", action.getValue().getValueHigh()));
 		writeCode(String.format("        digitalWrite(%d,%s);", action.getComponent().getPin(), SIGNAL.HIGH));
-		writeCode(String.format("      } else if (in == \"%s\") {", action.getValue().getValueLow()));
+		writeCode(String.format("      } else if (in == %s) {", action.getValue().getValueLow()));
 		writeCode(String.format("        digitalWrite(%d,%s);", action.getComponent().getPin(), SIGNAL.LOW));
 		writeCode("      }");
 		writeCode("      break;");

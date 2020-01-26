@@ -9,17 +9,18 @@ root            :   declaration bricks states EOF;
 
 declaration     :   'application' name=IDENTIFIER;
 
-bricks          :   (sensor|actuator|lcd)+;
+bricks          :   (sensor|actuator|lcd|keyboard)+;
     sensor      :   'sensor'   location ;
     actuator    :   'actuator' location ;
     lcd         :   'lcd'      location ;
+    keyboard    :   'keyboard' id=IDENTIFIER (':' STRING ',' STRING)?;
     location    :   id=IDENTIFIER ':' port=PORT_NUMBER;
 
 states          :   state+;
     state       :   initial? name=IDENTIFIER '{'  action+ transition+ '}';
     action      :   receiver=IDENTIFIER (actionLCD | actionAssignment);
     actionLCD   :   'print' value=(IDENTIFIER|STRING);
-    actionAssignment : '<=' value=SIGNAL;
+    actionAssignment : '<=' value=(SIGNAL|IDENTIFIER);
     transition  :   (trigger=IDENTIFIER 'is' value=SIGNAL)? '=>' next=IDENTIFIER ;
     initial     :   '->';
 
