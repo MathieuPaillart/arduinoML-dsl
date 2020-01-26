@@ -3,7 +3,7 @@ application lcdDo
 # Declaring Bricks
 sensor button: 9
 actuator led : 10
-lcd ecranLCD: 1
+lcd ecranLCD: 2
 keyboard kb
 
 # Declaring States

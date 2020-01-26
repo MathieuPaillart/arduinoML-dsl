@@ -8,11 +8,14 @@ import fr.unice.polytech.arduinoml.kernel.structural.*;
 import fr.unice.polytech.arduinomldsl.exception.BusNonExistentException;
 import fr.unice.polytech.arduinomldsl.exception.MissingDeclarationOfComponent;
 import fr.unice.polytech.arduinomldsl.exception.OnlyOneKeyboardException;
+import fr.unice.polytech.arduinomldsl.exception.PinAlreadyAssignedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ModelBuilder extends ArduinoMLBaseListener {
 
@@ -30,6 +33,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     private Map<String, Actuator> actuators = new HashMap<>();
     private Map<String, LCD> lcds = new HashMap<>();
     private Keyboard keyboard = null;
+    private List<Integer> pins = new ArrayList<>();
     private Map<String, State> states = new HashMap<>();
     private Map<String, List<Binding>> bindings = new HashMap<>();
     private List<Binding> currentBindings = new ArrayList<>();
@@ -37,6 +41,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     public App retrieve() {
         if (built) {
+            resolve();
             return theApp;
         }
         throw new RuntimeException("Cannot retrieve a model that was not created!");
@@ -104,9 +109,8 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         lcd.setName(ctx.location().id.getText());
 
         int busNumber = Integer.parseInt(ctx.location().port.getText());
-        if (busNumber > 3)
+        if (busNumber > 2)
             throw new BusNonExistentException("the bus number :" + busNumber + "specified isn't supported in arduino ");
-
         lcd.setPin(Integer.parseInt(ctx.location().port.getText()));
         this.theApp.getComponents().add(lcd);
         lcds.put(lcd.getName(), lcd);
@@ -213,6 +217,36 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         Sensor trigger;
         SIGNAL value;
     }
+
+    public void resolve() {
+        for (Actuator actuator : actuators.values()) {
+            if (pins.contains(actuator.getPin())) {
+                throw new PinAlreadyAssignedException("This actuator is using an already assigned pin : " + actuator.getName());
+            }
+            pins.add(actuator.getPin());
+        }
+        for (Sensor sensor : sensors.values()) {
+            if (pins.contains(sensor.getPin())) {
+                throw new PinAlreadyAssignedException("This sensor is using an already assigned pin : " + sensor.getName());
+            }
+            pins.add(sensor.getPin());
+        }
+        for (LCD lcd : lcds.values()) {
+            List<Integer> pinsForLcd;
+            if (lcd.getPin() == 1) {
+                pinsForLcd = Stream.of(2, 3, 4, 5, 6, 7, 8).collect(Collectors.toList());
+            } else {
+                pinsForLcd = Stream.of(10, 11, 12, 13, 14, 15, 16).collect(Collectors.toList());
+            }
+            pinsForLcd.forEach(pin -> {
+                if (pins.contains(pin)) {
+                    throw new PinAlreadyAssignedException("This lcd is using an already assigned pin : " + lcd.getName());
+                }
+                pins.add(pin);
+            });
+        }
+    }
+
 
 }
 
