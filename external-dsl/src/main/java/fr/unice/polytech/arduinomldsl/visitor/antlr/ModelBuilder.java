@@ -221,6 +221,8 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     /**
      * This method checks at the end of the parsing if all the pin from the different actuator/sensor/lcd are unique
      * This method is quite long because the error message is meaningful, we know exactly which component's pin is in fault
+     *
+     * We could have done it inside the listener method but it would have added unnecessary behavior in those methods.
      */
     public void resolve() {
         for (Actuator actuator : actuators.values()) {
