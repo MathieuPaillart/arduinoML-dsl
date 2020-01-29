@@ -1,11 +1,11 @@
 package fr.unice.polytech.arduinoml.kernel.behavioral;
 
-
 import fr.unice.polytech.arduinoml.kernel.generator.core.CoreCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL;
 
-public class ActionLcd<T> extends Action<T> {
+public class ActionAssignmentFromNumeric extends Action<SIGNAL> {
 
     /**
      * {@inheritDoc}
@@ -28,6 +28,6 @@ public class ActionLcd<T> extends Action<T> {
      */
     @Override
     public void acceptCoreGen(CoreCodeGenVisitor codeGenVisitor) {
-        codeGenVisitor.visitActionLCD(this);
+        codeGenVisitor.visitActionNumeric(this);
     }
 }

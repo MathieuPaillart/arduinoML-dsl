@@ -1,17 +1,21 @@
 @startuml
 skinparam linetype polyline
 ' Inheritance
-Component <|-- Actuator
-Component <|-- Sensor
-Component <|-- LCD
-
+Component <|-- BusComponent
+Component <|-- SimpleComponent
+Component <|-- RemoteComponent
+BusComponent <|-- LCD
+SimpleComponent <|-- Actuator
+SimpleComponent <|-- Sensor
+Assignable <|-- LCD
+Assignable <|-- Actuator
 class "ActionNumericAssignment<SIGNAL>" as ActionNumericAssignment_SIGNAL
 class "ActionRemoteAssignment<Remote>" as ActionRemoteAssignment_Remote
 
 Action <|-- ActionNumericAssignment_SIGNAL
 Action <|-- ActionRemoteAssignment_Remote
 Action <|-- ActionLcd
-Remote <|-- Keyboard
+RemoteComponent <|-- Keyboard
 ' NamedElement <|-- Component
 ' NamedElement <|-- Remote
 ' NamedElement <|-- State
@@ -23,12 +27,20 @@ abstract class NamedElement{
 }
 abstract class Action<T> {
    value : T
-   component : Component
+   assignable : Assignable
 }
 abstract class Component {
+}
+abstract class BusComponent {
+  bus : Integer
+}
+abstract class SimpleComponent {
   pin : Integer
 }
-abstract class Remote {
+interface Assignable {
+}
+abstract class RemoteComponent {
+  baud : Baud
 }
 class ActionLcd<T> {
 }
@@ -47,7 +59,6 @@ enum SIGNAL {
 
 ' All attributes
 App -- "*" Component : components
-App -- "1" Remote : remote
 App -- "*" State : states
 State -- "*" Action : actions
 State -- "*" Transition : transitions
@@ -55,7 +66,7 @@ State -- "*" Transition : transitions
 ' Hide methods
 hide Component methods
 hide Keyboard methods
-hide Remote methods
+hide RemoteComponent methods
 hide Action methods
 hide SIGNAL methods
 hide Transition methods
@@ -63,12 +74,10 @@ hide NamedElement methods
 hide ActionNumericAssignment_SIGNAL methods
 hide ActionRemoteAssignment_Remote methods
 ' Hide members
-hide Remote members
+hide RemoteComponent members
 hide Keyboard members
-hide ActionNumericAssignment members
 hide LCD members
 hide Keyboard members
-hide Remote members
 hide ActionLcd members
 hide Sensor members
 hide App members

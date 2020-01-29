@@ -1,11 +1,15 @@
 package fr.unice.polytech.arduinoml.kernel;
 
 import fr.unice.polytech.arduinoml.kernel.behavioral.State;
-import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.generator.Visitable;
-import fr.unice.polytech.arduinoml.kernel.structural.Component;
-import fr.unice.polytech.arduinoml.kernel.structural.LCD;
-import fr.unice.polytech.arduinoml.kernel.structural.Remote;
+import fr.unice.polytech.arduinoml.kernel.generator.core.ArduinoCoreCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.core.CoreCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.imports.ArduinoImportCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.setup.ArduinoSetupCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.structural.NamedElement;
+import fr.unice.polytech.arduinoml.kernel.structural.components.Component;
+import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
 
 import lombok.Data;
 
@@ -16,7 +20,7 @@ import java.util.List;
  * Arduino Application.
  */
 @Data
-public class App extends NamedElement implements Visitable {
+public class App implements NamedElement {
 
 	/**
 	 * Application's name.
@@ -34,33 +38,26 @@ public class App extends NamedElement implements Visitable {
 	private List<State> states = new ArrayList<State>();
 
 	/**
-	 * Application's lcd.
-	 */
-    private List<LCD> lcds = new ArrayList<>();
-
-	/**
-	 * Application's remote control.
-	 */
-	private List<Remote> remotes = new ArrayList<>();
-
-	/**
 	 * Application's initial state.
 	 */
 	private State initial;
 
-	/**
-	 * {@inheritDoc}
-	 */
-    public void addLCD(LCD lcd) {
-        components.add(lcd);
-        lcds.add(lcd);
-    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void accept(CodeGenVisitor codeGenVisitor) {
-		codeGenVisitor.visitApp(this);
+	public String generate() {
+		final ImportCodeGenVisitor importCodeGenVisitor = new ArduinoImportCodeGenVisitor();
+		final SetupCodeGenVisitor setupCodeGenVisitor = new ArduinoSetupCodeGenVisitor();
+		final CoreCodeGenVisitor coreCodeGenVisitor = new ArduinoCoreCodeGenVisitor();
+
+		final StringBuffer code = new StringBuffer();
+		importCodeGenVisitor.visitApp(this);
+		code.append(importCodeGenVisitor.getResult());
+
+		setupCodeGenVisitor.visitApp(this);
+		code.append(setupCodeGenVisitor.getResult());
+
+		coreCodeGenVisitor.visitApp(this);
+		code.append(coreCodeGenVisitor.getResult());
+
+		return code.toString();
 	}
 }

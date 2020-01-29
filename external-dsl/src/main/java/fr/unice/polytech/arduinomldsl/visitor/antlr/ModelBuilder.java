@@ -5,6 +5,11 @@ import dsl.ArduinoMLParser;
 import fr.unice.polytech.arduinoml.kernel.App;
 import fr.unice.polytech.arduinoml.kernel.behavioral.*;
 import fr.unice.polytech.arduinoml.kernel.structural.*;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.components.Component;
+import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
+import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
 import fr.unice.polytech.arduinomldsl.exception.BusNonExistentException;
 import fr.unice.polytech.arduinomldsl.exception.MissingDeclarationOfComponent;
 import fr.unice.polytech.arduinomldsl.exception.OnlyOneKeyboardException;
@@ -105,13 +110,12 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     public void enterLcd(ArduinoMLParser.LcdContext ctx) {
         System.out.println("------------------- enterLcd --------------------");
         System.out.println("lcd " + ctx.location().id.getText() + " " + ctx.location().port.getText());
-        LCD lcd = new LCD();
-        lcd.setName(ctx.location().id.getText());
 
         int busNumber = Integer.parseInt(ctx.location().port.getText());
         if (busNumber > 2)
             throw new BusNonExistentException("the bus number :" + busNumber + "specified isn't supported in arduino ");
-        lcd.setPin(Integer.parseInt(ctx.location().port.getText()));
+        LCD lcd = new LCD(busNumber);
+        lcd.setName(ctx.location().id.getText());
         this.theApp.getComponents().add(lcd);
         lcds.put(lcd.getName(), lcd);
     }
@@ -128,7 +132,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
                 keyboard = new Keyboard(ctx.STRING().get(0).getText().replace("\"", ""), ctx.STRING().get(1).getText().replace("\"", ""));
             }
             keyboard.setName(ctx.id.getText());
-            theApp.getRemotes().add(keyboard);
+            theApp.getComponents().add(keyboard);
         } else {
             throw new OnlyOneKeyboardException("You have declared more than one keyboard, it is not supported");
         }
@@ -164,7 +168,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
         System.out.println("action " + receiver + " " + value);
 
-        Component component = actuators.containsKey(receiver) ? actuators.get(receiver) : lcds.get(receiver);
+        Assignable assignable = actuators.containsKey(receiver) ? actuators.get(receiver) : lcds.get(receiver);
         Action action;
         if (isLcdAction) {
             action = new ActionLcd();
@@ -177,16 +181,16 @@ public class ModelBuilder extends ArduinoMLBaseListener {
             }
         } else {
             if (isActionWithKeyboard) {
-                action = new ActionRemoteAssignment();
+                action = new ActionAssignmentFromRemote();
                 action.setValue(keyboard);
             } else {
-                action = new ActionNumericAssignment();
+                action = new ActionAssignmentFromNumeric();
                 action.setValue(value);
             }
         }
-        action.setComponent(component);
-        if (action.getComponent() == null) {
-            throw new MissingDeclarationOfComponent(receiver + "is missing from component declaration");
+        action.setAssignableComponent(assignable);
+        if (action.getAssignableComponent() == null) {
+            throw new MissingDeclarationOfComponent(receiver + "is missing from assignableComponent declaration");
         }
         currentState.getActions().add(action);
     }
@@ -224,7 +228,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
     /**
      * This method checks at the end of the parsing if all the pin from the different actuator/sensor/lcd are unique
-     * This method is quite long because the error message is meaningful, we know exactly which component's pin is in fault
+     * This method is quite long because the error message is meaningful, we know exactly which assignableComponent's pin is in fault
      * <p>
      * We could have done it inside the listener method but it would have added unnecessary behavior in those methods.
      */
@@ -241,7 +245,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
             }
             pins.add(sensor.getPin());
         }
-        for (LCD lcd : lcds.values()) {
+       /* for (LCD lcd : lcds.values()) {
             List<Integer> pinsForLcd;
             if (lcd.getPin() == 1) {
                 pinsForLcd = Stream.of(2, 3, 4, 5, 6, 7, 8).collect(Collectors.toList());
@@ -254,7 +258,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
                 }
                 pins.add(pin);
             });
-        }
+        } */
     }
 
 

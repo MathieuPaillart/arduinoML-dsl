@@ -1,7 +1,7 @@
 package fr.unice.polytech.arduinoml.kernel.behavioral;
 
 import fr.unice.polytech.arduinoml.kernel.generator.Visitable;
-import fr.unice.polytech.arduinoml.kernel.structural.Component;
+import fr.unice.polytech.arduinoml.kernel.structural.Assignable;
 import lombok.Data;
 
 /**
@@ -16,9 +16,9 @@ public abstract class Action<T> implements Visitable {
     T value;
 
     /**
-     * A component (can be LCD or Actuator)
+     * A assignable assignableComponent
      */
-    private Component component;
+    private Assignable assignableComponent;
 
     /**
      * Setter value.

@@ -1,9 +1,11 @@
 package fr.unice.polytech.arduinoml.kernel.behavioral;
 
+import fr.unice.polytech.arduinoml.kernel.generator.core.CoreCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL;
-import fr.unice.polytech.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
 import fr.unice.polytech.arduinoml.kernel.generator.Visitable;
-import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
 import lombok.Data;
 
 /**
@@ -31,7 +33,23 @@ public class Transition implements Visitable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void accept(CodeGenVisitor codeGenVisitor) {
+	public void acceptImportGen(ImportCodeGenVisitor codeGenVisitor) {
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void acceptSetupGen(SetupCodeGenVisitor codeGenVisitor) {
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void acceptCoreGen(CoreCodeGenVisitor codeGenVisitor) {
 		codeGenVisitor.visitTransition(this);
 	}
 }

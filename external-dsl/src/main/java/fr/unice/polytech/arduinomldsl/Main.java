@@ -2,10 +2,8 @@ package fr.unice.polytech.arduinomldsl;
 
 import dsl.ArduinoMLLexer;
 import dsl.ArduinoMLParser;
-import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
 import fr.unice.polytech.arduinomldsl.visitor.antlr.ModelBuilder;
 import fr.unice.polytech.arduinoml.kernel.App;
-import fr.unice.polytech.arduinoml.kernel.generator.ArduinoCodeGenVisitor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -61,9 +59,7 @@ public class Main {
     }
 
     private static void exportToCode(App theApp, int fileNumber) throws IOException {
-        CodeGenVisitor codeGenerator = new ArduinoCodeGenVisitor();
-        theApp.accept(codeGenerator);
-        Object content = codeGenerator.getResult();
+        Object content = theApp.generate();
         File file = new File(Main.class.getClassLoader().getResource("result").getFile());
         Files.write(Paths.get(file.toPath().toString() + "/scenario" + fileNumber + ".txt"), content.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
     }

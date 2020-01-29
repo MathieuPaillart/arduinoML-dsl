@@ -4,9 +4,14 @@ import fr.unice.polytech.arduinoml.kernel.App;
 import fr.unice.polytech.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
-import fr.unice.polytech.arduinoml.kernel.generator.ArduinoCodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.structural.*;
+import fr.unice.polytech.arduinoml.kernel.generator.core.ArduinoCoreCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.core.ImportCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.components.Component;
+import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
+import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
+import fr.unice.polytech.arduinoml.kernel.structural.components.remote.RemoteComponent;
 import groovy.lang.Binding;
 
 import java.util.ArrayList;
@@ -15,7 +20,7 @@ import java.util.List;
 public class GroovuinoMLModel {
 
     private List<Component> components;
-    private List<Remote> remotes;
+    private List<RemoteComponent> remotes;
     private List<State> states;
     private State initialState;
 
@@ -47,7 +52,7 @@ public class GroovuinoMLModel {
 
     public void createLCD(String name, Integer busNumber) {
 		if (busNumber > 3) {
-			throw new IllegalArgumentException(String.format("Bus number %s specified isn't supported in Arduino for the LCD component", busNumber));
+			throw new IllegalArgumentException(String.format("Bus number %s specified isn't supported in Arduino for the LCD assignableComponent", busNumber));
 		}
 		LCD lcd = new LCD();
 		lcd.setName(name);
@@ -88,8 +93,8 @@ public class GroovuinoMLModel {
         app.setRemotes(this.remotes);
         app.setStates(this.states);
         app.setInitial(this.initialState);
-        CodeGenVisitor codeGenerator = new ArduinoCodeGenVisitor();
-        app.accept(codeGenerator);
+        ImportCodeGenVisitor codeGenerator = new ArduinoCoreCodeGenVisitor();
+        app.acceptCoreGen(codeGenerator);
 
         return codeGenerator.getResult();
     }

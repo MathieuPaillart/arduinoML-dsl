@@ -1,7 +1,9 @@
 package fr.unice.polytech.arduinoml.kernel.behavioral;
 
-import fr.unice.polytech.arduinoml.kernel.NamedElement;
-import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.core.CoreCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.structural.NamedElement;
 import fr.unice.polytech.arduinoml.kernel.generator.Visitable;
 import lombok.Data;
 
@@ -12,7 +14,12 @@ import java.util.List;
  * Arduino FSM State.
  */
 @Data
-public class State extends NamedElement implements Visitable {
+public class State implements Visitable, NamedElement {
+
+	/**
+	 * Element's name.
+	 */
+	protected String name;
 
 	/**
 	 * Actions of the state.
@@ -37,7 +44,23 @@ public class State extends NamedElement implements Visitable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void accept(CodeGenVisitor codeGenVisitor) {
+	public void acceptImportGen(ImportCodeGenVisitor codeGenVisitor) {
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void acceptSetupGen(SetupCodeGenVisitor codeGenVisitor) {
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void acceptCoreGen(CoreCodeGenVisitor codeGenVisitor) {
 		codeGenVisitor.visitState(this);
 	}
 }

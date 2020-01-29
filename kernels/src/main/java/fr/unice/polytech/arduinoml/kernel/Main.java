@@ -1,28 +1,19 @@
 package fr.unice.polytech.arduinoml.kernel;
 
 import fr.unice.polytech.arduinoml.kernel.behavioral.ActionLcd;
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionNumericAssignment;
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionRemoteAssignment;
+import fr.unice.polytech.arduinoml.kernel.behavioral.ActionAssignmentFromRemote;
 import fr.unice.polytech.arduinoml.kernel.behavioral.State;
-import fr.unice.polytech.arduinoml.kernel.generator.ArduinoCodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.generator.CodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.structural.Actuator;
-import fr.unice.polytech.arduinoml.kernel.structural.Keyboard;
-import fr.unice.polytech.arduinoml.kernel.structural.LCD;
-import fr.unice.polytech.arduinoml.kernel.structural.Remote;
+import fr.unice.polytech.arduinoml.kernel.generator.core.ArduinoCoreCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
+import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		App app = new App();
+		/*App app = new App();
 		State read = new State();
 
 		LCD lcd = new LCD();
@@ -35,15 +26,15 @@ public class Main {
 		/*
 		ActionLcd<String> printString = new ActionLcd();
 		printString.setValue("SALUT");
-		printString.setComponent(lcd);
-		 */
+		printString.setAssignableComponent(lcd);
+
 		ActionLcd<Keyboard> printString = new ActionLcd();
 		printString.setValue(keyboard);
-		printString.setComponent(lcd);
+		printString.setAssignableComponent(lcd);
 
-		ActionRemoteAssignment ledKeyboard = new ActionRemoteAssignment();
+		ActionAssignmentFromRemote ledKeyboard = new ActionAssignmentFromRemote();
 		ledKeyboard.setValue(keyboard);
-		ledKeyboard.setComponent(led);
+		ledKeyboard.setAssignableComponent(led);
 
 		read.setActions(Stream.of(ledKeyboard).collect(Collectors.toList()));
 		app.setLcds(Stream.of(lcd).collect(Collectors.toList()));
@@ -52,8 +43,8 @@ public class Main {
 		app.setRemotes(Stream.of(keyboard).collect(Collectors.toList()));
 		app.setInitial(read);
 
-		CodeGenVisitor visitor = new ArduinoCodeGenVisitor();
-		app.accept(visitor);
-		System.out.println(visitor.getResult().toString());
+		ImportCodeGenVisitor visitor = new ArduinoCoreCodeGenVisitor();
+		app.acceptCoreGen(visitor);
+		System.out.println(visitor.getResult().toString());*/
 	}
 }
