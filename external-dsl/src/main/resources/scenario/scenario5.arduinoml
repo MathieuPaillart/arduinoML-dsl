@@ -1,4 +1,4 @@
-application lcdDo
+application lcdPrintSensor
 
 # Declaring Bricks
 sensor button: 9

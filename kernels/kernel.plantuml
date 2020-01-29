@@ -63,6 +63,9 @@ hide NamedElement methods
 hide ActionNumericAssignment_SIGNAL methods
 hide ActionRemoteAssignment_Remote methods
 ' Hide members
+hide Remote members
+hide Keyboard members
+hide ActionNumericAssignment members
 hide LCD members
 hide Keyboard members
 hide Remote members

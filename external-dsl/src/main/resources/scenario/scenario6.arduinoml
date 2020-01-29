@@ -1,14 +1,18 @@
-application lcdDo
+application lcdPrintKeyboardValue
 
 # Declaring Bricks
 sensor button: 9
 actuator led : 10
-lcd ecranLCD: 2
+lcd ecranLCD: 1
 keyboard kb
 
 # Declaring States
 -> write {
+  led <= LOW
   ecranLCD print kb #Ecran lcd prend la valeur du keyboard
-  led <= kb #Led prend la valeur HIGH si on tape "mathieu" sinon la valeur low si on tape seg => comportement par défaut 1/0
-  => write
+  => wait
+}
+wait{
+  led <= HIGH
+  button is HIGH => write
 }

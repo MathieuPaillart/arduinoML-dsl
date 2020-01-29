@@ -17,7 +17,7 @@ bricks          :   (sensor|actuator|lcd|keyboard)+;
     location    :   id=IDENTIFIER ':' port=PORT_NUMBER;
 
 states          :   state+;
-    state       :   initial? name=IDENTIFIER '{'  action+ transition+ '}';
+    state       :   initial? name=IDENTIFIER '{'  action* transition+ '}';
     action      :   receiver=IDENTIFIER (actionLCD | actionAssignment);
     actionLCD   :   'print' value=(IDENTIFIER|STRING);
     actionAssignment : '<=' value=(SIGNAL|IDENTIFIER);

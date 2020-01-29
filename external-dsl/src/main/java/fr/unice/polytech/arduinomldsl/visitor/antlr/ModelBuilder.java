@@ -122,9 +122,13 @@ public class ModelBuilder extends ArduinoMLBaseListener {
             if (ctx.STRING().isEmpty()) {
                 keyboard = new Keyboard();
             } else {
-                keyboard = new Keyboard(ctx.STRING().get(0).getText(), ctx.STRING().get(1).getText());
+                if (ctx.STRING().size() < 2) {
+                    throw new IllegalArgumentException("Keyboard requires two arguments in this format : Keyboard kb :\"HIGH\":\"BAD\"");
+                }
+                keyboard = new Keyboard(ctx.STRING().get(0).getText().replace("\"", ""), ctx.STRING().get(1).getText().replace("\"", ""));
             }
             keyboard.setName(ctx.id.getText());
+            theApp.getRemotes().add(keyboard);
         } else {
             throw new OnlyOneKeyboardException("You have declared more than one keyboard, it is not supported");
         }
@@ -165,7 +169,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         if (isLcdAction) {
             action = new ActionLcd();
             if (isSensorReference(value)) {
-                action.setValue(String.valueOf(sensors.get(value).getPin()));
+                action.setValue(sensors.get(value));
             } else if (isActionWithKeyboard) {
                 action.setValue(keyboard);
             } else {
@@ -221,7 +225,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
     /**
      * This method checks at the end of the parsing if all the pin from the different actuator/sensor/lcd are unique
      * This method is quite long because the error message is meaningful, we know exactly which component's pin is in fault
-     *
+     * <p>
      * We could have done it inside the listener method but it would have added unnecessary behavior in those methods.
      */
     public void resolve() {

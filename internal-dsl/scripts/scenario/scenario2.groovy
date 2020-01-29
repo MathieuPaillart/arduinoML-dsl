@@ -13,8 +13,8 @@ from on to transitionButton2 when button1 becomes LOW
 from on to transitionButton1 when button2 becomes LOW
 from transitionButton1 to off when button1 becomes LOW
 from transitionButton1 to on when button2 becomes HIGH
-from transitionButton2 to off when button2 becomes LOW
 from transitionButton2 to on when button1 becomes HIGH
+from transitionButton2 to off when button2 becomes LOW
 from off to transitionButton1 when button1 becomes HIGH
 from off to transitionButton2 when button2 becomes HIGH
 
