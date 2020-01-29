@@ -4,7 +4,12 @@ skinparam linetype polyline
 Component <|-- Actuator
 Component <|-- Sensor
 Component <|-- LCD
-Action <|-- ActionNumericAssignment
+
+class "ActionNumericAssignment<SIGNAL>" as ActionNumericAssignment_SIGNAL
+class "ActionRemoteAssignment<Remote>" as ActionRemoteAssignment_Remote
+
+Action <|-- ActionNumericAssignment_SIGNAL
+Action <|-- ActionRemoteAssignment_Remote
 Action <|-- ActionLcd
 Remote <|-- Keyboard
 ' NamedElement <|-- Component
@@ -17,7 +22,7 @@ abstract class NamedElement{
   name : String
 }
 abstract class Action<T> {
-   value : String
+   value : T
    component : Component
 }
 abstract class Component {
@@ -43,22 +48,29 @@ enum SIGNAL {
 ' All attributes
 App -- "*" Component : components
 App -- "1" Remote : remote
-App -- "*" LCD : lcds
 App -- "*" State : states
 State -- "*" Action : actions
 State -- "*" Transition : transitions
 
 ' Hide methods
 hide Component methods
+hide Keyboard methods
+hide Remote methods
 hide Action methods
 hide SIGNAL methods
 hide Transition methods
 hide NamedElement methods
+hide ActionNumericAssignment_SIGNAL methods
+hide ActionRemoteAssignment_Remote methods
 ' Hide members
 hide LCD members
+hide Keyboard members
+hide Remote members
 hide ActionLcd members
 hide Sensor members
 hide App members
 hide Actuator members
 hide State members
+hide ActionNumericAssignment_SIGNAL members
+hide ActionRemoteAssignment_Remote members
 @enduml
