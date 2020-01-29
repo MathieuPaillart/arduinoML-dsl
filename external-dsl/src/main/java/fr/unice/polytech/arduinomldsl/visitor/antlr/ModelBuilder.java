@@ -233,7 +233,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         }
         for (Sensor sensor : sensors.values()) {
             if (pins.contains(sensor.getPin())) {
-                throw new PinAlreadyAssignedException(String.format("This sensor %s is using an already assigned pin : %s" + sensor.getName(), sensor.getPin()));
+                throw new PinAlreadyAssignedException(String.format("This sensor %s is using an already assigned pin : %s", sensor.getName(), sensor.getPin()));
             }
             pins.add(sensor.getPin());
         }

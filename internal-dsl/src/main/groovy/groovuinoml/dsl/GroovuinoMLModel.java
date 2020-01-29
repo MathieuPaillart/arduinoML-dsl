@@ -56,11 +56,9 @@ public class GroovuinoMLModel {
 		this.binding.setVariable(name, lcd);
     }
 
-    public void createKeyboard(String name, String high, String low) {
+    public void createKeyboard(String name) {
         final Keyboard keyboard = new Keyboard();
         keyboard.setName(name);
-        keyboard.setValueHigh(high);
-        keyboard.setValueLow(low);
         this.remotes.add(keyboard);
         this.binding.setVariable(name, keyboard);
     }

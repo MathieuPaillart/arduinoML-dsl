@@ -1,12 +1,7 @@
 package main.groovy.groovuinoml.dsl
 
 import fr.unice.polytech.arduinoml.kernel.behavioral.*
-import fr.unice.polytech.arduinoml.kernel.structural.Actuator
-import fr.unice.polytech.arduinoml.kernel.structural.Keyboard
-import fr.unice.polytech.arduinoml.kernel.structural.LCD
-import fr.unice.polytech.arduinoml.kernel.structural.Remote
-import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
-import fr.unice.polytech.arduinoml.kernel.structural.Sensor
+import fr.unice.polytech.arduinoml.kernel.structural.*
 
 abstract class GroovuinoMLBasescript extends Script {
     // sensor "name" pin n
@@ -28,7 +23,12 @@ abstract class GroovuinoMLBasescript extends Script {
 
     // keyboard "name" values high low
     def keyboard(String name) {
-        [values  : { high,low -> ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createKeyboard(name, high, low) }]
+        ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createKeyboard(name)
+        [values: { high, low ->
+            Keyboard keyboard = ((Keyboard) ((GroovuinoMLBinding) this.getBinding()).getVariable(name))
+            keyboard.setValueHigh(high)
+            keyboard.setValueLow(low)
+        }]
     }
 
     // state "name" means actuator becomes signal [and actuator becomes signal]*n
@@ -58,7 +58,7 @@ abstract class GroovuinoMLBasescript extends Script {
                  Action action = new ActionLcd()
                  action.setComponent(actuator instanceof String ? (LCD) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (LCD) actuator)
                  if(text instanceof Sensor) {
-                     action.setValue(((Sensor) text).getPin().toString());
+                     action.setValue(((Sensor) text));
                  } else if (text instanceof Keyboard) {
                      action.setValue(((Keyboard) text));
                  } else {
