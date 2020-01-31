@@ -4,6 +4,8 @@ import fr.unice.polytech.arduinoml.kernel.App;
 import fr.unice.polytech.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.arduinoml.kernel.exception.BusNonExistentException;
+import fr.unice.polytech.arduinoml.kernel.exception.PinAlreadyAssignedException;
 import fr.unice.polytech.arduinoml.kernel.generator.core.ArduinoCoreCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.generator.core.CoreCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.generator.imports.ArduinoImportCodeGenVisitor;
@@ -24,6 +26,7 @@ public class GroovuinoMLModel {
 
     private List<Component> components;
     private List<State> states;
+    private List<Integer> pins;
     private State initialState;
 
     private Binding binding;
@@ -31,32 +34,47 @@ public class GroovuinoMLModel {
     public GroovuinoMLModel(Binding binding) {
         this.components = new ArrayList<>();
         this.states = new ArrayList<>();
+        this.pins = new ArrayList<>();
         this.binding = binding;
     }
 
     public void createSensor(String name, Integer pinNumber) {
+        if (pins.contains(pinNumber)) {
+            throw new PinAlreadyAssignedException(String.format("This sensor %s is using an already assigned pin : %s", name, pinNumber));
+        }
         Sensor sensor = new Sensor();
         sensor.setName(name);
         sensor.setPin(pinNumber);
         this.components.add(sensor);
+        this.pins.add(pinNumber);
         this.binding.setVariable(name, sensor);
     }
 
     public void createActuator(String name, Integer pinNumber) {
+        if (pins.contains(pinNumber)) {
+            throw new PinAlreadyAssignedException(String.format("This actuator %s is using an already assigned pin : %s", name, pinNumber));
+        }
         Actuator actuator = new Actuator();
         actuator.setName(name);
         actuator.setPin(pinNumber);
         this.components.add(actuator);
+        this.pins.add(pinNumber);
         this.binding.setVariable(name, actuator);
     }
 
     public void createLCD(String name, Integer busNumber) {
         if (busNumber > 3) {
-            throw new IllegalArgumentException(String.format("Bus number %s specified isn't supported in Arduino for the LCD assignableComponent", busNumber));
+            throw new BusNonExistentException(String.format("The bus number %s specified isn't supported in arduino!", busNumber));
         }
         LCD lcd = new LCD(busNumber);
+        for (Integer pin : lcd.getPins()) {
+            if (pins.contains(pin)) {
+                throw new PinAlreadyAssignedException(String.format("This lcd %s is using an already assigned pin : %s", name, pin));
+            }
+        }
         lcd.setName(name);
         this.components.add(lcd);
+        this.pins.addAll(lcd.getPins());
         this.binding.setVariable(name, lcd);
     }
 

@@ -4,23 +4,21 @@ import dsl.ArduinoMLBaseListener;
 import dsl.ArduinoMLParser;
 import fr.unice.polytech.arduinoml.kernel.App;
 import fr.unice.polytech.arduinoml.kernel.behavioral.*;
-import fr.unice.polytech.arduinoml.kernel.structural.*;
-import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
-import fr.unice.polytech.arduinoml.kernel.structural.components.Component;
+import fr.unice.polytech.arduinoml.kernel.exception.BusNonExistentException;
+import fr.unice.polytech.arduinoml.kernel.exception.MissingDeclarationOfComponent;
+import fr.unice.polytech.arduinoml.kernel.exception.OnlyOneKeyboardException;
+import fr.unice.polytech.arduinoml.kernel.exception.PinAlreadyAssignedException;
+import fr.unice.polytech.arduinoml.kernel.structural.Assignable;
+import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL;
 import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
-import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
 import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
-import fr.unice.polytech.arduinomldsl.exception.BusNonExistentException;
-import fr.unice.polytech.arduinomldsl.exception.MissingDeclarationOfComponent;
-import fr.unice.polytech.arduinomldsl.exception.OnlyOneKeyboardException;
-import fr.unice.polytech.arduinomldsl.exception.PinAlreadyAssignedException;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ModelBuilder extends ArduinoMLBaseListener {
 
@@ -113,7 +111,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 
         int busNumber = Integer.parseInt(ctx.location().port.getText());
         if (busNumber > 2)
-            throw new BusNonExistentException("the bus number :" + busNumber + "specified isn't supported in arduino ");
+            throw new BusNonExistentException(String.format("The bus number %s specified isn't supported in arduino!", busNumber));
         LCD lcd = new LCD(busNumber);
         lcd.setName(ctx.location().id.getText());
         this.theApp.getComponents().add(lcd);
@@ -158,6 +156,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
         this.currentState = null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void enterAction(ArduinoMLParser.ActionContext ctx) {
         System.out.println("------------------- enterAction --------------------");

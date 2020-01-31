@@ -1,4 +1,4 @@
-package fr.unice.polytech.arduinomldsl.exception;
+package fr.unice.polytech.arduinoml.kernel.exception;
 
 public class OnlyOneKeyboardException extends RuntimeException {
     public OnlyOneKeyboardException(String s) {
