@@ -5,13 +5,16 @@ import fr.unice.polytech.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.arduinoml.kernel.generator.core.ArduinoCoreCodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.generator.core.ImportCodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
+import fr.unice.polytech.arduinoml.kernel.generator.core.CoreCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.imports.ArduinoImportCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.setup.ArduinoSetupCodeGenVisitor;
+import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.structural.components.Component;
 import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
-import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
 import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
-import fr.unice.polytech.arduinoml.kernel.structural.components.remote.RemoteComponent;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
 import groovy.lang.Binding;
 
 import java.util.ArrayList;
@@ -20,16 +23,14 @@ import java.util.List;
 public class GroovuinoMLModel {
 
     private List<Component> components;
-    private List<RemoteComponent> remotes;
     private List<State> states;
     private State initialState;
 
     private Binding binding;
 
     public GroovuinoMLModel(Binding binding) {
-        this.components = new ArrayList();
-        this.states = new ArrayList();
-        this.remotes = new ArrayList();
+        this.components = new ArrayList<>();
+        this.states = new ArrayList<>();
         this.binding = binding;
     }
 
@@ -39,7 +40,6 @@ public class GroovuinoMLModel {
         sensor.setPin(pinNumber);
         this.components.add(sensor);
         this.binding.setVariable(name, sensor);
-//		System.out.println("> sensor " + name + " on pin " + pinNumber);
     }
 
     public void createActuator(String name, Integer pinNumber) {
@@ -51,23 +51,23 @@ public class GroovuinoMLModel {
     }
 
     public void createLCD(String name, Integer busNumber) {
-		if (busNumber > 3) {
-			throw new IllegalArgumentException(String.format("Bus number %s specified isn't supported in Arduino for the LCD assignableComponent", busNumber));
-		}
-		LCD lcd = new LCD();
-		lcd.setName(name);
-		lcd.setPin(busNumber);
-		this.components.add(lcd);
-		this.binding.setVariable(name, lcd);
+        if (busNumber > 3) {
+            throw new IllegalArgumentException(String.format("Bus number %s specified isn't supported in Arduino for the LCD assignableComponent", busNumber));
+        }
+        LCD lcd = new LCD(busNumber);
+        lcd.setName(name);
+        this.components.add(lcd);
+        this.binding.setVariable(name, lcd);
     }
 
     public void createKeyboard(String name) {
         final Keyboard keyboard = new Keyboard();
         keyboard.setName(name);
-        this.remotes.add(keyboard);
+        this.components.add(keyboard);
         this.binding.setVariable(name, keyboard);
     }
 
+    @SuppressWarnings("rawtypes")
     public void createState(String name, List<Action> actions) {
         State state = new State();
         state.setName(name);
@@ -90,12 +90,23 @@ public class GroovuinoMLModel {
         App app = new App();
         app.setName(appName);
         app.setComponents(this.components);
-        app.setRemotes(this.remotes);
         app.setStates(this.states);
         app.setInitial(this.initialState);
-        ImportCodeGenVisitor codeGenerator = new ArduinoCoreCodeGenVisitor();
-        app.acceptCoreGen(codeGenerator);
 
-        return codeGenerator.getResult();
+        ImportCodeGenVisitor importCodeGenVisitor = new ArduinoImportCodeGenVisitor();
+        SetupCodeGenVisitor setupCodeGenVisitor = new ArduinoSetupCodeGenVisitor();
+        CoreCodeGenVisitor coreCodeGenVisitor = new ArduinoCoreCodeGenVisitor();
+
+        StringBuilder code = new StringBuilder();
+        importCodeGenVisitor.visitApp(app);
+        code.append(importCodeGenVisitor.getResult());
+
+        setupCodeGenVisitor.visitApp(app);
+        code.append(setupCodeGenVisitor.getResult());
+
+        coreCodeGenVisitor.visitApp(app);
+        code.append(coreCodeGenVisitor.getResult());
+
+        return code.toString();
     }
 }
