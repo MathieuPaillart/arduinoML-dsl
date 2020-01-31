@@ -9,11 +9,11 @@ SimpleComponent <|-- Actuator
 SimpleComponent <|-- Sensor
 Assignable <|-- LCD
 Assignable <|-- Actuator
-class "ActionNumericAssignment<SIGNAL>" as ActionNumericAssignment_SIGNAL
-class "ActionRemoteAssignment<Remote>" as ActionRemoteAssignment_Remote
+class "ActionAssignmentFromNumeric<SIGNAL>" as ActionAssignmentFromNumeric_SIGNAL
+class "ActionAssignmentFromRemote<Remote>" as ActionAssignmentFromRemote_Remote
 
-Action <|-- ActionNumericAssignment_SIGNAL
-Action <|-- ActionRemoteAssignment_Remote
+Action <|-- ActionAssignmentFromNumeric_SIGNAL
+Action <|-- ActionAssignmentFromRemote_Remote
 Action <|-- ActionLcd
 RemoteComponent <|-- Keyboard
 ' NamedElement <|-- Component
@@ -64,25 +64,23 @@ State -- "*" Action : actions
 State -- "*" Transition : transitions
 
 ' Hide methods
-hide Component methods
-hide Keyboard methods
 hide RemoteComponent methods
-hide Action methods
-hide SIGNAL methods
+hide BusComponent methods
+hide SimpleComponent methods
 hide Transition methods
+hide Action methods
 hide NamedElement methods
-hide ActionNumericAssignment_SIGNAL methods
-hide ActionRemoteAssignment_Remote methods
+hide SIGNAL methods
 ' Hide members
-hide RemoteComponent members
 hide Keyboard members
 hide LCD members
-hide Keyboard members
-hide ActionLcd members
-hide Sensor members
-hide App members
 hide Actuator members
+hide Sensor members
+hide ActionAssignmentFromNumeric_SIGNAL members
+hide ActionAssignmentFromRemote_Remote members
+hide ActionLcd members
 hide State members
-hide ActionNumericAssignment_SIGNAL members
-hide ActionRemoteAssignment_Remote members
+hide Component members
+hide Assignable members
+hide App members
 @enduml
