@@ -19,14 +19,19 @@ Our kernel made in java with plantUML diagram and .png file at the root of the f
 
 In any cases, first you should launch this command at the root this directory : 
 
-> mvn clean install
+```shell script
+mvn clean install
+```
 
 It will install the kernel in your .m2 and will make the compilation possible in both our external and internal modules.
 
 Then you are ready to go, you have just to go inside external-dsl module or internal-dsl module to read the README :
 
-> cd external-dsl
-
+```shell script
+cd external-dsl
+```
 or 
 
-> cd internal-dsl
+```shell script
+cd internal-dsl
+```
