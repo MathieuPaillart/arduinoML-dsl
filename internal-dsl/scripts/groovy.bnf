@@ -1,0 +1,20 @@
+<app> ::= (<sensor>|<actuator>|<lcd>|<keyboard>|<state>|<initial>|<transition>|<export>)+ <EOF>
+
+<sensor> ::= "sensor" <STRING> ("onPin"|"pin") <number>
+<actuator> ::= "actuator" <STRING> "pin" <number>
+<lcd> ::= "lcd" <STRING> ("onBus"|"bus") <number>
+<keyboard> ::= "keyboard" <STRING> ["values" <STRING> "," <STRING>]
+
+<state> ::= "state" <STRING> "means" <statements>
+<initial> ::= "initial" <IDENTIFIER>
+
+<transition> ::= "from" <IDENTIFIER> "to" <IDENTIFIER> "when" <statements>
+
+<statements> ::= <statement> ["and" <statements>]
+<statement> ::= <IDENTIFIER> ("becomes" <IDENTIFIER> | "prints" (<IDENTIFIER> | <STRING>))
+
+<export> ::= "export" <IDENTIFIER>
+
+<IDENTIFIER> ::= (<letter>|<number>)+
+<STRING> ::= "\"" <IDENTIFIER> "\""
+
