@@ -1,13 +1,18 @@
 package main.groovy.groovuinoml.dsl
 
 import fr.unice.polytech.arduinoml.kernel.behavioral.*
-import fr.unice.polytech.arduinoml.kernel.structural.*
-import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator
+import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL
 import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD
-import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor
 import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard
 import fr.unice.polytech.arduinoml.kernel.structural.components.remote.RemoteComponent
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator
+import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor
 
+/**
+ * List the available methods for the groovy scripts.
+ *
+ * The methods use method chaining to populate the model.
+ */
 abstract class GroovuinoMLBasescript extends Script {
     // sensor "name" pin n
     def sensor(String name) {

@@ -7,6 +7,9 @@ import main.groovy.groovuinoml.dsl.GroovuinoMLModel
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
+/**
+ * Entry point of the DSL
+ */
 class GroovuinoMLDSL {
 	private GroovyShell shell
 	private CompilerConfiguration configuration

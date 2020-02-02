@@ -22,6 +22,9 @@ import groovy.lang.Binding;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Interface between the groovy scripts and the kernel's model. It's also used to generate the code
+ */
 public class GroovuinoMLModel {
 
     private List<Component> components;
