@@ -59,7 +59,7 @@ public class Main {
     }
 
     private static void exportToCode(App theApp, int fileNumber) throws IOException {
-        Object content = theApp.generate();
+        Object content = theApp.generateArduinoCode();
         File file = new File(Main.class.getClassLoader().getResource("result").getFile());
         Files.write(Paths.get(file.toPath().toString() + "/scenario" + fileNumber + ".txt"), content.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
     }

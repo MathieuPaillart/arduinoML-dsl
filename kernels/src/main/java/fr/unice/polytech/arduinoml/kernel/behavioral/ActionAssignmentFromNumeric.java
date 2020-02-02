@@ -5,6 +5,9 @@ import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor
 import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.structural.SIGNAL;
 
+/**
+ * Assignment from Numeric.
+ */
 public class ActionAssignmentFromNumeric extends Action<SIGNAL> {
 
     /**

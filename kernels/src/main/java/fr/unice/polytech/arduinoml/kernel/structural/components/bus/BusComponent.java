@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Representation of an arduino assignableComponent that uses a bus (ie, a list of pins).
+ * Representation of an arduino component that uses a bus (ie, a list of pins).
  */
 @Data
 public abstract class BusComponent extends Component {

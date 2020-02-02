@@ -11,23 +11,23 @@ import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
 public interface Visitable {
 
 	/**
-	 * Accept a code generator visitor to generate imports part.
+	 * Accept a code generator visitor to generate the imports part.
 	 *
-	 * @param codeGenVisitor the code generator visitor
+	 * @param codeGenVisitor the import code generator visitor
 	 */
 	void acceptImportGen(ImportCodeGenVisitor codeGenVisitor);
 
 	/**
-	 * Accept a code generator visitor to generate setup part.
+	 * Accept a code generator visitor to generate the setup part.
 	 *
-	 * @param codeGenVisitor the code generator visitor
+	 * @param codeGenVisitor the setup code generator visitor
 	 */
 	void acceptSetupGen(SetupCodeGenVisitor codeGenVisitor);
 
 	/**
-	 * Accept a code generator visitor to generate core part.
+	 * Accept a code generator visitor to generate the core part.
 	 *
-	 * @param codeGenVisitor the code generator visitor
+	 * @param codeGenVisitor the core code generator visitor
 	 */
 	void acceptCoreGen(CoreCodeGenVisitor codeGenVisitor);
 

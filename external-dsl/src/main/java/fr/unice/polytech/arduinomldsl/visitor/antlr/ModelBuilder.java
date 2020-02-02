@@ -170,7 +170,7 @@ public class ModelBuilder extends ArduinoMLBaseListener {
 		Assignable assignable = actuators.containsKey(receiver) ? actuators.get(receiver) : lcds.get(receiver);
 		Action action;
 		if (isLcdAction) {
-			action = new ActionLcd();
+			action = new ActionDisplay();
 			if (isSensorReference(value)) {
 				action.setValue(sensors.get(value));
 			} else if (isActionWithKeyboard) {

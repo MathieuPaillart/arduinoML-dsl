@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Code generator visitor abstract class.
+ * Setupt code generator visitor abstract class.
  *
  * @param <T> the output.
  */

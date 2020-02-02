@@ -42,8 +42,12 @@ public class App implements NamedElement {
 	 */
 	private State initial;
 
-
-	public String generate() {
+	/**
+	 * Generate the Arduino code of the model.
+	 *
+	 * @return the code
+	 */
+	public String generateArduinoCode() {
 		final ImportCodeGenVisitor importCodeGenVisitor = new ArduinoImportCodeGenVisitor();
 		final SetupCodeGenVisitor setupCodeGenVisitor = new ArduinoSetupCodeGenVisitor();
 		final CoreCodeGenVisitor coreCodeGenVisitor = new ArduinoCoreCodeGenVisitor();

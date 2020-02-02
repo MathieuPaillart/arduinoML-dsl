@@ -1,16 +1,5 @@
 package fr.unice.polytech.arduinoml.kernel;
 
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionLcd;
-import fr.unice.polytech.arduinoml.kernel.behavioral.ActionAssignmentFromRemote;
-import fr.unice.polytech.arduinoml.kernel.behavioral.State;
-import fr.unice.polytech.arduinoml.kernel.generator.core.ArduinoCoreCodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Actuator;
-import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
-import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public class Main {
 	public static void main(String[] args) throws Exception {
 		/*App app = new App();
@@ -24,11 +13,11 @@ public class Main {
 
 		Keyboard keyboard = new Keyboard("1", "2");
 		/*
-		ActionLcd<String> printString = new ActionLcd();
+		ActionDisplay<String> printString = new ActionDisplay();
 		printString.setValue("SALUT");
 		printString.setAssignableComponent(lcd);
 
-		ActionLcd<Keyboard> printString = new ActionLcd();
+		ActionDisplay<Keyboard> printString = new ActionDisplay();
 		printString.setValue(keyboard);
 		printString.setAssignableComponent(lcd);
 
