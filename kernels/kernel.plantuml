@@ -62,8 +62,8 @@ App "1" *--> "*" State : states
 State "*" --> "*" Transition : transitions
 Transition "*" --> "1" Sensor : sensor
 Transition "*" --> "1" State : next
-State -- "*" Action : actions
-Action "*"-- "1" Assignable : assignable
+State "*" --> "*" Action : actions
+Action "*" --> "1" Assignable : assignable
 
 ' Hide methods
 hide RemoteComponent methods
