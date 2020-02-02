@@ -3,13 +3,11 @@ package fr.unice.polytech.arduinoml.kernel.generator.core;
 import fr.unice.polytech.arduinoml.kernel.App;
 import fr.unice.polytech.arduinoml.kernel.behavioral.*;
 import fr.unice.polytech.arduinoml.kernel.structural.*;
-import fr.unice.polytech.arduinoml.kernel.structural.components.Component;
 import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
-import fr.unice.polytech.arduinoml.kernel.structural.components.remote.RemoteComponent;
 import fr.unice.polytech.arduinoml.kernel.structural.components.simple.SimpleComponent;
 
 /**
- * Quick and dirty visitor to support the generation of Arduino C code.
+ * Visitor to support the generation of the core Arduino C code.
  */
 public class ArduinoCoreCodeGenVisitor extends CoreCodeGenVisitor<StringBuffer> {
 
@@ -152,7 +150,7 @@ public class ArduinoCoreCodeGenVisitor extends CoreCodeGenVisitor<StringBuffer> 
      * {@inheritDoc}
      */
     @Override
-    public void visitActionLCD(ActionLcd actionLcd) {
+    public void visitActionDisplay(ActionDisplay actionLcd) {
         writeCode("  delay(30);");
         writeCode(String.format("  %s.setCursor(0, 0);", actionLcd.getAssignableComponent().getName()));
         writeCode(String.format("  %s.clear();", actionLcd.getAssignableComponent().getName()));

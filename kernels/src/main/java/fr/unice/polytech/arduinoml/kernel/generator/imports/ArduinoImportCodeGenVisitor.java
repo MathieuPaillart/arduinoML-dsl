@@ -6,6 +6,9 @@ import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
 
 import java.util.stream.Collectors;
 
+/**
+ * Visitor to support the generation of the import in Arduino C code.
+ */
 public class ArduinoImportCodeGenVisitor extends ImportCodeGenVisitor<StringBuffer> {
 
 	/**

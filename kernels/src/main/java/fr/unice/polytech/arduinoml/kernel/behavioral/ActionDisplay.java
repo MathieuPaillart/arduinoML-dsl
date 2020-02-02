@@ -1,14 +1,16 @@
-package fr.unice.polytech.arduinoml.kernel.structural.components.simple;
+package fr.unice.polytech.arduinoml.kernel.behavioral;
+
 
 import fr.unice.polytech.arduinoml.kernel.generator.core.CoreCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
-import fr.unice.polytech.arduinoml.kernel.structural.Assignable;
 
 /**
- * An Arduino actuator.
+ * Action to display something on an assignable component.
+ *
+ * @param <T> the value origin
  */
-public class Actuator extends SimpleComponent implements Assignable {
+public class ActionDisplay<T> extends Action<T> {
 
 	/**
 	 * {@inheritDoc}
@@ -23,7 +25,7 @@ public class Actuator extends SimpleComponent implements Assignable {
 	 */
 	@Override
 	public void acceptSetupGen(SetupCodeGenVisitor codeGenVisitor) {
-		codeGenVisitor.visitActuator(this);
+
 	}
 
 	/**
@@ -31,7 +33,6 @@ public class Actuator extends SimpleComponent implements Assignable {
 	 */
 	@Override
 	public void acceptCoreGen(CoreCodeGenVisitor codeGenVisitor) {
-
+		codeGenVisitor.visitActionDisplay(this);
 	}
-
 }

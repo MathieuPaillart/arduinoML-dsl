@@ -5,7 +5,7 @@ import fr.unice.polytech.arduinoml.kernel.generator.Visitable;
 import lombok.Data;
 
 /**
- * Representation of an arduino assignableComponent.
+ * Representation of an arduino component.
  */
 @Data
 public abstract class Component implements Visitable, NamedElement {

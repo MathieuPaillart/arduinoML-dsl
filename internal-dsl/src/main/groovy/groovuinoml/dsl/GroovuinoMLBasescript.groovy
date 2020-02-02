@@ -60,7 +60,7 @@ abstract class GroovuinoMLBasescript extends Script {
             },
              prints : { text ->
                  // Need to separate behavior between print input
-                 Action action = new ActionLcd()
+                 Action action = new ActionDisplay()
                  action.setAssignableComponent(actuator instanceof String ? (LCD) ((GroovuinoMLBinding) this.getBinding()).getVariable(actuator) : (LCD) actuator)
                  if(text instanceof Sensor) {
                      action.setValue(((Sensor) text));

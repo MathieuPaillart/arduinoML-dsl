@@ -5,6 +5,9 @@ import fr.unice.polytech.arduinoml.kernel.generator.imports.ImportCodeGenVisitor
 import fr.unice.polytech.arduinoml.kernel.generator.setup.SetupCodeGenVisitor;
 import fr.unice.polytech.arduinoml.kernel.structural.components.remote.RemoteComponent;
 
+/**
+ * Assignment from remote component.
+ */
 public class ActionAssignmentFromRemote extends Action<RemoteComponent> {
 
     /**

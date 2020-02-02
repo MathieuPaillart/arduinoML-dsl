@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Code generator visitor abstract class.
+ * Import code generator visitor abstract class.
  *
  * @param <T> the output.
  */
@@ -33,7 +33,7 @@ public abstract class ImportCodeGenVisitor<T> {
     /**
      * Visits a lcd.
      *
-     * @param lcd the transition
+     * @param lcd the lcd
      */
     public abstract void visitLCD(LCD lcd);
 

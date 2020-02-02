@@ -1,33 +1,33 @@
 @startuml
 skinparam linetype polyline
+
 ' Inheritance
 Component <|-- BusComponent
-Component <|-- SimpleComponent
-Component <|-- RemoteComponent
 BusComponent <|-- LCD
-SimpleComponent <|-- Actuator
-SimpleComponent <|-- Sensor
 Assignable <|-- LCD
 Assignable <|-- Actuator
+Component <|-- SimpleComponent
+SimpleComponent <|-- Sensor
+SimpleComponent <|-- Actuator
+Component <|-- RemoteComponent
+RemoteComponent <|-- Keyboard
 class "ActionAssignmentFromNumeric<SIGNAL>" as ActionAssignmentFromNumeric_SIGNAL
 class "ActionAssignmentFromRemote<Remote>" as ActionAssignmentFromRemote_Remote
 
 Action <|-- ActionAssignmentFromNumeric_SIGNAL
 Action <|-- ActionAssignmentFromRemote_Remote
-Action <|-- ActionLcd
-RemoteComponent <|-- Keyboard
+Action <|-- ActionDisplay
+
 ' NamedElement <|-- Component
 ' NamedElement <|-- Remote
 ' NamedElement <|-- State
 ' NamedElement <|-- App
-
 ' Abstract Class Declaration
-abstract class NamedElement{
+Interface NamedElement{
   name : String
 }
 abstract class Action<T> {
    value : T
-   assignable : Assignable
 }
 abstract class Component {
 }
@@ -40,15 +40,13 @@ abstract class SimpleComponent {
 interface Assignable {
 }
 abstract class RemoteComponent {
-  baud : Baud
 }
-class ActionLcd<T> {
+class ActionDisplay<T> {
 }
 ' Class Declaration
 class App {
 }
 class Transition {
-    next : State
     signal : SIGNAL
 }
 ' Enum Declaration
@@ -58,15 +56,25 @@ enum SIGNAL {
 }
 
 ' All attributes
-App -- "*" Component : components
-App -- "*" State : states
+
+App "1" *--> "*" Component : components
+App "1" *--> "*" State : states
+State "*" --> "*" Transition : transitions
+Transition "*" --> "1" Sensor : sensor
+Transition "*" --> "1" State : next
 State -- "*" Action : actions
-State -- "*" Transition : transitions
+Action "*"-- "1" Assignable : assignable
 
 ' Hide methods
 hide RemoteComponent methods
 hide BusComponent methods
 hide SimpleComponent methods
+hide Component methods
+hide Keyboard methods
+hide BusComponent methods
+hide SimpleComponent methods
+hide Action methods
+hide SIGNAL methods
 hide Transition methods
 hide Action methods
 hide NamedElement methods
@@ -74,13 +82,18 @@ hide SIGNAL methods
 ' Hide members
 hide Keyboard members
 hide LCD members
+hide Keyboard members
+hide RemoteComponent members
+hide ActionDisplay members
+hide Sensor members
+hide App members
 hide Actuator members
 hide Sensor members
 hide ActionAssignmentFromNumeric_SIGNAL members
 hide ActionAssignmentFromRemote_Remote members
-hide ActionLcd members
 hide State members
 hide Component members
 hide Assignable members
 hide App members
+hide Assignable members
 @enduml

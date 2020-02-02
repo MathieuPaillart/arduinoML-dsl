@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Code generator visitor abstract class.
+ * Core code generator visitor abstract class.
  *
  * @param <T> the output.
  */
@@ -45,14 +45,14 @@ public abstract class CoreCodeGenVisitor<T> {
     public abstract void visitTransition(Transition transition);
 
     /**
-     * Visits an Action containing a assignableComponent that is a lcd.
+     * Visits a display action containing an assignable component.
      *
-     * @param actionLcd the action
+     * @param actionDisplay the action
      */
-    public abstract void visitActionLCD(ActionLcd actionLcd);
+    public abstract void visitActionDisplay(ActionDisplay actionDisplay);
 
     /**
-     * Visits an Action containing a assignableComponent that is a actuator.
+     * Visits a numeric assignment action containing an assignable component.
      *
      * @param actionNumericAssignment the action
      */

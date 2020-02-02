@@ -7,6 +7,9 @@ import fr.unice.polytech.arduinoml.kernel.structural.components.bus.LCD;
 import fr.unice.polytech.arduinoml.kernel.structural.components.simple.Sensor;
 import fr.unice.polytech.arduinoml.kernel.structural.components.remote.Keyboard;
 
+/**
+ * Visitor to support the generation of the setup Arduino C code.
+ */
 public class ArduinoSetupCodeGenVisitor extends SetupCodeGenVisitor<StringBuffer> {
 
 	/**

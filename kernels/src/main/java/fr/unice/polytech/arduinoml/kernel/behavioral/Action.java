@@ -16,7 +16,7 @@ public abstract class Action<T> implements Visitable {
     T value;
 
     /**
-     * A assignable assignableComponent
+     * An assignable component.
      */
     private Assignable assignableComponent;
 
